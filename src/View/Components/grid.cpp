@@ -34,10 +34,41 @@ void Grid::drawScene(QPainter& painter)
 {
     painter.setPen(Qt::NoPen);
 
+    QRectF selectionBounds;
+    bool firstSelected = true;
+
     for (auto& node : _scene.nodes())
     {
         painter.setBrush(node->color());
         painter.drawEllipse(QPointF(node->posX(), node->posY()), node->radius(), node->radius());
+
+        if (node->selected())
+        {
+            float r = node->radius();
+            QRectF nodeRect(node->posX() - r, node->posY() - r, 2*r, 2*r);
+
+            if (firstSelected)
+            {
+                selectionBounds = nodeRect;
+                firstSelected = false;
+            }
+            else
+            {
+                selectionBounds = selectionBounds.united(nodeRect);
+            }
+        }
+    }
+
+    if (!firstSelected)
+    {
+        painter.save();
+        QPen pen(Qt::gray);
+        pen.setStyle(Qt::DashLine);
+        pen.setWidthF(1.5);
+        painter.setPen(pen);
+        painter.setBrush(Qt::NoBrush);
+        painter.drawRect(selectionBounds);
+        painter.restore();
     }
 }
 
@@ -67,7 +98,7 @@ void Grid::showContextMenu(const QPoint& pos)
         float posX = (pos.x() - _offsetX) / _scale;
         float posY = (height() - pos.y() - _offsetY) / _scale;
 
-        _scene.addNode(std::make_unique<NodeView>(posX, posY, Qt::blue));
+        _scene.addNode(std::make_unique<NodeView>(posX, posY, Colors::LIGHT_BLUE));
     });
     menu.addAction("Add edge", this, [](){  });
     menu.addAction("Clear nodes", this, [this](){ _scene.clearNodes(); });
@@ -93,6 +124,8 @@ void Grid::mousePressEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
+        //TODO - if event->pos() in selectionRectangle
+
         _selectionManager.setDrawRectangle(true);
         _selectionManager.setRectStart(event->pos());
         _selectionManager.setRectEnd(event->pos());
@@ -109,6 +142,14 @@ void Grid::mousePressEvent(QMouseEvent* event)
 
 void Grid::mouseReleaseEvent(QMouseEvent *event)
 {
+    const SceneOffsets sceneOffsets{
+        _offsetX,
+        _offsetY,
+        _scale,
+        static_cast<float>(height())
+    };
+
+    _scene.handleSelection(_selectionManager, sceneOffsets);
     _selectionManager.setDrawRectangle(false);
 
     update();

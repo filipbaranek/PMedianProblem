@@ -3,8 +3,17 @@
 
 #include <memory>
 #include <vector>
+#include <QRectF>
 #include "NodeView.h"
 #include "SelectionManager.h"
+
+struct SceneOffsets
+{
+    float _offsetX;
+    float _offsetY;
+    float _scale;
+    float _height;
+};
 
 class Scene
 {
@@ -13,18 +22,13 @@ public:
 
     inline const std::vector<std::unique_ptr<NodeView>>& nodes() const { return _nodes; }
 
-    inline const std::vector<NodeView*>& selectedNodes() const { return _selectedNodes; }
+    inline void clearNodes() { _nodes.clear(); }
 
-    inline void clearSelectedNodes() { _selectedNodes.clear(); }
-
-    void clearNodes();
-
-    void handleSelection(const SelectionManager& selectionManager);
+    void handleSelection(const SelectionManager& selectionManager, const SceneOffsets& sceneOffsets);
 
 
 private:
     std::vector<std::unique_ptr<NodeView>> _nodes;
-    std::vector<NodeView*>                 _selectedNodes;
 };
 
 #endif // SCENE_H

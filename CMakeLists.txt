@@ -22,12 +22,17 @@ set(SOURCES
     src/main.cpp
     src/View/mainwindow.cpp
     src/View/Components/grid.h src/View/Components/grid.cpp
+    src/View/Workspace/Scene.cpp
+    src/View/Workspace/NodeView.cpp
 )
 
 set(HEADERS
     src/View/Workspace/SelectionManager.h
     src/View/Workspace/NodeView.h
     src/View/mainwindow.h
+    src/Common/Colors.h
+    src/View/Workspace/Scene.h
+    src/View/Workspace/IMovable.h
 )
 
 set(VIEWS
@@ -38,9 +43,6 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
-    src/Common/Colors.h
-    src/View/Workspace/Scene.h
-    src/View/Workspace/Scene.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE
