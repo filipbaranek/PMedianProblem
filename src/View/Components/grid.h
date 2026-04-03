@@ -3,7 +3,9 @@
 
 #include <QWidget>
 #include <QtGui>
+#include <QMenu>
 #include "../Workspace/SelectionManager.h"
+#include "../Workspace/Scene.h"
 
 class Grid : public QWidget
 {
@@ -13,11 +15,13 @@ public:
     { }
 
 private:
-    void drawGrid(QPainter& painter, const QRect& window);
+    void drawGrid(QPainter& painter, const QRectF& window);
 
     void drawScene(QPainter& painter);
 
     void drawSelectionRectangle(QPainter& painter);
+
+    void showContextMenu(const QPoint& pos);
 
 protected:
     void paintEvent(QPaintEvent* event) override;
@@ -32,14 +36,13 @@ protected:
 
 private:
     SelectionManager _selectionManager;
+    Scene            _scene;
     QPoint           _lastMousePos;
     float            _offsetX;
     float            _offsetY;
     float            _scale;
 
     static constexpr const int CELL_SIZE = 100;
-
-    static constexpr const QColor TRANSPARENT_ORANGE{255, 200, 0, 128};
 };
 
 #endif // GRID_H

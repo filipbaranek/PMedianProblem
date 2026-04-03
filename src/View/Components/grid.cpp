@@ -1,6 +1,7 @@
 #include "grid.h"
+#include "../../Common/Colors.h"
 
-void Grid::drawGrid(QPainter& painter, const QRect& window)
+void Grid::drawGrid(QPainter& painter, const QRectF& window)
 {
     painter.translate(_offsetX, height() - _offsetY);
     painter.scale(1, -1);
@@ -31,7 +32,13 @@ void Grid::drawGrid(QPainter& painter, const QRect& window)
 
 void Grid::drawScene(QPainter& painter)
 {
-    //TODO
+    painter.setPen(Qt::NoPen);
+
+    for (auto& node : _scene.nodes())
+    {
+        painter.setBrush(node->color());
+        painter.drawEllipse(QPointF(node->posX(), node->posY()), node->radius(), node->radius());
+    }
 }
 
 void Grid::drawSelectionRectangle(QPainter& painter)
@@ -41,7 +48,7 @@ void Grid::drawSelectionRectangle(QPainter& painter)
         painter.save();
         painter.resetTransform();
         painter.setPen(Qt::NoPen);
-        painter.setBrush(TRANSPARENT_ORANGE);
+        painter.setBrush(Colors::TRANSPARENT_ORANGE);
 
         QRectF rect(_selectionManager.rectStart(), _selectionManager.rectEnd());
         rect = rect.normalized();
@@ -50,6 +57,26 @@ void Grid::drawSelectionRectangle(QPainter& painter)
 
         painter.restore();
     }
+}
+
+void Grid::showContextMenu(const QPoint& pos)
+{
+    QMenu menu(this);
+
+    menu.addAction("Add node", this, [this, &pos](){
+        float posX = (pos.x() - _offsetX) / _scale;
+        float posY = (height() - pos.y() - _offsetY) / _scale;
+
+        _scene.addNode(std::make_unique<NodeView>(posX, posY, Qt::blue));
+    });
+    menu.addAction("Add edge", this, [](){  });
+    menu.addAction("Clear nodes", this, [this](){ _scene.clearNodes(); });
+    menu.addAction("Clear edges", this, [](){  });
+    menu.addAction("Clear", this, [](){  });
+
+    menu.exec(mapToGlobal(pos));
+
+    update();
 }
 
 void Grid::paintEvent(QPaintEvent* event)
@@ -73,6 +100,10 @@ void Grid::mousePressEvent(QMouseEvent* event)
     else if (event->button() == Qt::MiddleButton)
     {
         _lastMousePos = event->pos();
+    }
+    else if (event->button() == Qt::RightButton)
+    {
+        showContextMenu(event->pos());
     }
 }
 
@@ -113,14 +144,7 @@ void Grid::wheelEvent(QWheelEvent* event)
         _scale /= zoomStep;
     }
 
-    if (_scale < 0.1f)
-    {
-        _scale = 0.1f;
-    }
-    if (_scale > 10.0f)
-    {
-        _scale = 10.0f;
-    }
+    _scale = std::clamp(_scale, 0.1f, 10.0f);
 
     update();
 }
