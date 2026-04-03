@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget* parent)
 
     auto* layout = new QVBoxLayout(central);
 
-    auto* grid = new Grid(this);
+    auto* grid = new Grid(central);
     layout->addWidget(grid);
 }
 

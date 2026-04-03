@@ -23,6 +23,5 @@ public:
 
 private:
     Ui::MainWindow* _ui;
-    Grid*           _grid;
 };
 #endif // MAINWINDOW_H

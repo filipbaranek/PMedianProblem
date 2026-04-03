@@ -32,6 +32,7 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${VIEWS}
     src/View/Components/grid.h src/View/Components/grid.cpp
+    src/View/Workspace/SelectionManager.h
 )
 
 target_link_libraries(PMedianProblem PRIVATE

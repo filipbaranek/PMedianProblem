@@ -1,22 +1,17 @@
 #include "grid.h"
 
-void Grid::paintEvent(QPaintEvent *event)
+void Grid::drawGrid(QPainter& painter, const QRect& window)
 {
-    Q_UNUSED(event);
-    QPainter painter(this);
-    painter.setRenderHint(QPainter::Antialiasing);
-
     painter.translate(_offsetX, height() - _offsetY);
     painter.scale(1, -1);
     painter.scale(_scale, _scale);
 
-    QRect rect = event->rect();
     float invScale = 1.0f / _scale;
 
-    int startCol = (rect.left() - _offsetX) * invScale / CELL_SIZE;
-    int endCol   = (rect.right() - _offsetX) * invScale / CELL_SIZE;
-    int startRow = (rect.top() - _offsetY) * invScale / CELL_SIZE;
-    int endRow   = (rect.bottom() - _offsetY) * invScale / CELL_SIZE;
+    int startCol = (window.left() - _offsetX) * invScale / CELL_SIZE;
+    int endCol   = (window.right() - _offsetX) * invScale / CELL_SIZE;
+    int startRow = (window.top() - _offsetY) * invScale / CELL_SIZE;
+    int endRow   = (window.bottom() - _offsetY) * invScale / CELL_SIZE;
 
     painter.setPen(Qt::gray);
     for (int i = startRow; i <= endRow; ++i)
@@ -34,27 +29,78 @@ void Grid::paintEvent(QPaintEvent *event)
     painter.drawLine(startCol * CELL_SIZE, 0, (endCol + 1) * CELL_SIZE, 0);
 }
 
-void Grid::mousePressEvent(QMouseEvent *event)
+void Grid::drawScene(QPainter& painter)
+{
+    //TODO
+}
+
+void Grid::drawSelectionRectangle(QPainter& painter)
+{
+    if (_selectionManager.drawRectangle())
+    {
+        painter.save();
+        painter.resetTransform();
+        painter.setPen(Qt::NoPen);
+        painter.setBrush(TRANSPARENT_ORANGE);
+
+        QRectF rect(_selectionManager.rectStart(), _selectionManager.rectEnd());
+        rect = rect.normalized();
+
+        painter.drawRect(rect);
+
+        painter.restore();
+    }
+}
+
+void Grid::paintEvent(QPaintEvent* event)
+{
+    QPainter painter(this);
+    painter.setRenderHint(QPainter::Antialiasing);
+
+    drawGrid(painter, event->rect());
+    drawScene(painter);
+    drawSelectionRectangle(painter);
+}
+
+void Grid::mousePressEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
+        _selectionManager.setDrawRectangle(true);
+        _selectionManager.setRectStart(event->pos());
+        _selectionManager.setRectEnd(event->pos());
+    }
+    else if (event->button() == Qt::MiddleButton)
+    {
         _lastMousePos = event->pos();
     }
 }
 
-void Grid::mouseMoveEvent(QMouseEvent *event)
+void Grid::mouseReleaseEvent(QMouseEvent *event)
+{
+    _selectionManager.setDrawRectangle(false);
+
+    update();
+}
+
+void Grid::mouseMoveEvent(QMouseEvent* event)
 {
     if (event->buttons() & Qt::LeftButton)
     {
-        QPoint delta = event->pos() - _lastMousePos;
+        _selectionManager.setRectEnd(event->pos());
+    }
+    else if (event->buttons() & Qt::MiddleButton)
+    {
+        QPointF delta = event->pos() - _lastMousePos;
         _offsetX += delta.x();
         _offsetY -= delta.y();
         _lastMousePos = event->pos();
-        update();
     }
+
+    update();
 }
 
-void Grid::wheelEvent(QWheelEvent *event)
+void Grid::wheelEvent(QWheelEvent* event)
 {
     float zoomStep = 1.1f;
 
