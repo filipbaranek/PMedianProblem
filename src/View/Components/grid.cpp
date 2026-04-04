@@ -238,8 +238,11 @@ void Grid::mouseReleaseEvent(QMouseEvent* event)
                 }
             }
 
-            if (from && to && from != to)
+            if (from && to && from != to && !from->isNodeConnectedTo(to->id()) && !to->isNodeConnectedTo(from->id()))
             {
+                from->connectNode(to->id());
+                to->connectNode(from->id());
+
                 _scene.addEdge(std::make_unique<EdgeView>(from, to, length));
             }
 

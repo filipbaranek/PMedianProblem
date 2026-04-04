@@ -1,6 +1,7 @@
 #ifndef NODEVIEW_H
 #define NODEVIEW_H
 
+#include <set>
 #include <QColor>
 #include <QPointF>
 
@@ -29,16 +30,21 @@ public:
 
     inline void setSelected(const bool& selected) { _selected = selected; }
 
+    inline void connectNode(const int& node) { _connectedNodes.insert(node); }
+
+    inline bool isNodeConnectedTo(const int& node) { return _connectedNodes.contains(node); }
+
     inline constexpr const int radius() { return 30; }
 
     void move(const QPointF& delta);
 
 private:
-    int    _id;
-    float  _posX;
-    float  _posY;
-    bool   _selected;
-    QColor _color;
+    int           _id;
+    float         _posX;
+    float         _posY;
+    bool          _selected;
+    QColor        _color;
+    std::set<int> _connectedNodes;
 };
 
 #endif // NODEVIEW_H
