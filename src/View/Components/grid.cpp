@@ -32,7 +32,7 @@ void Grid::drawGrid(QPainter& painter, const QRectF& window)
 
 void Grid::drawScene(QPainter& painter)
 {
-    painter.setPen(Qt::NoPen);
+    painter.setPen(Qt::blue);
 
     for (auto& node : _scene.nodes())
     {
@@ -52,11 +52,35 @@ void Grid::drawScene(QPainter& painter)
             painter.restore();
         }
     }
+
+    for (auto& edge : _scene.edges())
+    {
+        QPointF from{ edge->from()->posX(), edge->from()->posY() };
+        QPointF to{ edge->to()->posX(), edge->to()->posY() };
+
+        painter.setPen(Colors::LIGHT_BLUE);
+        painter.drawLine(from, to);
+    }
+
+    if (_createEdgeEvent && _edgeEventActive)
+    {
+        QPoint currentMousePos = mapFromGlobal(QCursor::pos());
+        QPointF from = QPointF(
+            _lastMousePos.x() * _scale + _offsetX,
+            height() - (_lastMousePos.y() * _scale + _offsetY)
+        );
+
+        painter.save();
+        painter.resetTransform();
+        painter.setPen(Colors::LIGHT_BLUE);
+        painter.drawLine(from, currentMousePos);
+        painter.restore();
+    }
 }
 
 void Grid::drawSelectionRectangle(QPainter& painter)
 {
-    if (_selectionRectangle._drawRectangle)
+    if (_selectionRectangle._drawRectangle && !_createEdgeEvent)
     {
         painter.save();
         painter.resetTransform();
@@ -74,25 +98,38 @@ void Grid::drawSelectionRectangle(QPainter& painter)
 
 void Grid::showContextMenu(const QPoint& pos)
 {
+    static int nodeId{};    //TODO match last id
+
     QMenu menu(this);
 
     menu.addAction("Add node", this, [this, &pos]() {
         float posX = (pos.x() - _offsetX) / _scale;
         float posY = (height() - pos.y() - _offsetY) / _scale;
 
-        _scene.addNode(std::make_unique<NodeView>(posX, posY, Colors::LIGHT_BLUE));
+        _scene.addNode(std::make_unique<NodeView>(nodeId, posX, posY, Colors::LIGHT_BLUE));
     });
-    menu.addAction("Add edge", this, [](){  });
+
+    menu.addAction("Add edge", this, [this](){
+        _createEdgeEvent = true;
+        _selectionRectangle._drawRectangle = false;
+        _moveItemsEvent = false;
+    });
 
     menu.addAction("Clear nodes", this, [this]() {
         _scene.clearNodes();
     });
 
-    menu.addAction("Clear edges", this, [](){  });
+    menu.addAction("Clear edges", this, [this](){
+        _scene.clearEdges();
+    });
 
-    menu.addAction("Clear", this, [](){  });
+    menu.addAction("Clear", this, [this](){
+        _scene.clearScene();
+    });
 
     menu.exec(mapToGlobal(pos));
+
+    ++nodeId;
 
     update();
 }
@@ -119,7 +156,12 @@ void Grid::mousePressEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        if (_selectedItems._drawRectangle)
+        if (_createEdgeEvent)
+        {
+            _lastMousePos = screenToScenePos(event->pos());
+            _edgeEventActive = true;
+        }
+        else if (_selectedItems._drawRectangle)
         {
             QPointF scenePos = screenToScenePos(event->pos());
             QRectF selectedItemsRect{_selectedItems._rectStart, _selectedItems._rectEnd};
@@ -161,7 +203,50 @@ void Grid::mouseReleaseEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        if (!_moveItemsEvent)
+        if (_createEdgeEvent)
+        {
+            float length;
+            QPointF posFrom  = _lastMousePos;
+            QPointF posTo    = screenToScenePos(event->pos());
+            NodeView* from{};
+            NodeView* to{};
+
+            if (_euclideanDistance)
+            {
+                length = std::sqrt(std::pow(posFrom.x(), posTo.x()) + std::pow(posFrom.y(), posTo.y()));
+                //TODO - CHECK
+            }
+            else
+            {
+                //TODO - pop up window
+            }
+
+            for (auto& node : _scene.nodes())
+            {
+                QRectF nodePos{
+                    QPointF(node->posX() - node->radius(), node->posY() - node->radius()),
+                    QPointF(node->posX() + node->radius(), node->posY() + node->radius())
+                };
+
+                if (nodePos.contains(posFrom))
+                {
+                    from = node.get();
+                }
+                if (nodePos.contains(posTo))
+                {
+                    to = node.get();
+                }
+            }
+
+            if (from && to && from != to)
+            {
+                _scene.addEdge(std::make_unique<EdgeView>(from, to, length));
+            }
+
+            _createEdgeEvent = false;
+            _edgeEventActive = false;
+        }
+        else if (!_moveItemsEvent)
         {
             const SceneOffsets sceneOffsets{
                 _offsetX,

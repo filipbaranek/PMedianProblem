@@ -11,7 +11,8 @@ class Grid : public QWidget
 {
 public:
     explicit Grid(QWidget* parrent = nullptr)
-        : QWidget(parrent), _offsetX{}, _offsetY{}, _scale(1.0f), _moveItemsEvent{}
+        : QWidget(parrent), _offsetX{}, _offsetY{},
+          _scale(1.0f), _moveItemsEvent{}, _edgeEventActive{}
     { }
 
 private:
@@ -40,11 +41,14 @@ private:
     SelectionRectangle _selectionRectangle;
     SelectionRectangle _selectedItems;
     Scene              _scene;
-    QPoint             _lastMousePos;
+    QPointF            _lastMousePos;
     float              _offsetX;
     float              _offsetY;
     float              _scale;
+    bool               _euclideanDistance;
     bool               _moveItemsEvent;
+    bool               _createEdgeEvent;
+    bool               _edgeEventActive;
 
     static constexpr const int CELL_SIZE = 100;
 };

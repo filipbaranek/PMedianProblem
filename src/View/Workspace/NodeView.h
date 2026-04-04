@@ -2,14 +2,16 @@
 #define NODEVIEW_H
 
 #include <QColor>
-#include "IMovable.h"
+#include <QPointF>
 
-class NodeView : public IMovable
+class NodeView
 {
 public:
-    NodeView(float posX, float posY, const QColor& color)
-        : _posX(posX), _posY(posY), _color(color)
+    NodeView(int id, float posX, float posY, const QColor& color)
+        : _id(id), _posX(posX), _posY(posY), _color(color)
     { }
+
+    inline const int& id() const { return _id; }
 
     inline const float& posX() const { return _posX; }
 
@@ -23,13 +25,19 @@ public:
 
     inline void setColor(const QColor& color) { _color = color; }
 
+    inline const bool& selected() const { return _selected; }
+
+    inline void setSelected(const bool& selected) { _selected = selected; }
+
     inline constexpr const int radius() { return 30; }
 
-    void move(const QPointF& delta) override;
+    void move(const QPointF& delta);
 
 private:
+    int    _id;
     float  _posX;
     float  _posY;
+    bool   _selected;
     QColor _color;
 };
 

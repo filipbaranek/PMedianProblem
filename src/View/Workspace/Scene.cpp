@@ -1,6 +1,13 @@
 #include "Scene.h"
 #include "../../Common/Colors.h"
 
+void Scene::clearScene()
+{
+    _selectedItems.clear();
+    _nodes.clear();
+    _edges.clear();
+}
+
 SelectionRectangle Scene::handleSelection(const SelectionRectangle& selectionRectangle, const SceneOffsets& sceneOffsets)
 {
     if (!selectionRectangle._drawRectangle)
@@ -31,6 +38,7 @@ SelectionRectangle Scene::handleSelection(const SelectionRectangle& selectionRec
 
         if (selectionRect.intersects(nodeRect))
         {
+            node->setSelected(true);
             node->setColor(Colors::TRANSPARENT_YELLOW);
             _selectedItems.push_back(node.get());
 
@@ -49,6 +57,7 @@ SelectionRectangle Scene::handleSelection(const SelectionRectangle& selectionRec
         }
         else
         {
+            node->setSelected(false);
             node->setColor(Colors::LIGHT_BLUE);
         }
     }

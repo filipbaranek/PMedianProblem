@@ -32,7 +32,7 @@ set(HEADERS
     src/View/mainwindow.h
     src/Common/Colors.h
     src/View/Workspace/Scene.h
-    src/View/Workspace/IMovable.h
+    src/View/Workspace/EdgeView.h
 )
 
 set(VIEWS
@@ -43,6 +43,7 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
+
 )
 
 target_link_libraries(PMedianProblem PRIVATE
