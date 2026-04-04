@@ -4,6 +4,7 @@
 #include <memory>
 #include <vector>
 #include <QRectF>
+#include "IMovable.h"
 #include "NodeView.h"
 #include "SelectionManager.h"
 
@@ -22,13 +23,16 @@ public:
 
     inline const std::vector<std::unique_ptr<NodeView>>& nodes() const { return _nodes; }
 
+    inline const std::vector<IMovable*>& selectedItems() const { return _selectedItems; }
+
     inline void clearNodes() { _nodes.clear(); }
 
-    void handleSelection(const SelectionManager& selectionManager, const SceneOffsets& sceneOffsets);
+    SelectionRectangle handleSelection(const SelectionRectangle& selectionRectangle, const SceneOffsets& sceneOffsets);
 
 
 private:
     std::vector<std::unique_ptr<NodeView>> _nodes;
+    std::vector<IMovable*>                 _selectedItems;
 };
 
 #endif // SCENE_H

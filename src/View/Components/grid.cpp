@@ -34,54 +34,36 @@ void Grid::drawScene(QPainter& painter)
 {
     painter.setPen(Qt::NoPen);
 
-    QRectF selectionBounds;
-    bool firstSelected = true;
-
     for (auto& node : _scene.nodes())
     {
         painter.setBrush(node->color());
         painter.drawEllipse(QPointF(node->posX(), node->posY()), node->radius(), node->radius());
 
-        if (node->selected())
+        if (_selectedItems._drawRectangle)
         {
-            float r = node->radius();
-            QRectF nodeRect(node->posX() - r, node->posY() - r, 2*r, 2*r);
-
-            if (firstSelected)
-            {
-                selectionBounds = nodeRect;
-                firstSelected = false;
-            }
-            else
-            {
-                selectionBounds = selectionBounds.united(nodeRect);
-            }
+            painter.save();
+            QPen pen(Qt::gray);
+            pen.setStyle(Qt::DashLine);
+            pen.setWidthF(3.0f);
+            painter.setPen(pen);
+            painter.setBrush(Qt::NoBrush);
+            QRectF rect{_selectedItems._rectStart, _selectedItems._rectEnd};
+            painter.drawRect(rect);
+            painter.restore();
         }
-    }
-
-    if (!firstSelected)
-    {
-        painter.save();
-        QPen pen(Qt::gray);
-        pen.setStyle(Qt::DashLine);
-        pen.setWidthF(1.5);
-        painter.setPen(pen);
-        painter.setBrush(Qt::NoBrush);
-        painter.drawRect(selectionBounds);
-        painter.restore();
     }
 }
 
 void Grid::drawSelectionRectangle(QPainter& painter)
 {
-    if (_selectionManager.drawRectangle())
+    if (_selectionRectangle._drawRectangle)
     {
         painter.save();
         painter.resetTransform();
         painter.setPen(Qt::NoPen);
         painter.setBrush(Colors::TRANSPARENT_ORANGE);
 
-        QRectF rect(_selectionManager.rectStart(), _selectionManager.rectEnd());
+        QRectF rect(_selectionRectangle._rectStart, _selectionRectangle._rectEnd);
         rect = rect.normalized();
 
         painter.drawRect(rect);
@@ -94,20 +76,33 @@ void Grid::showContextMenu(const QPoint& pos)
 {
     QMenu menu(this);
 
-    menu.addAction("Add node", this, [this, &pos](){
+    menu.addAction("Add node", this, [this, &pos]() {
         float posX = (pos.x() - _offsetX) / _scale;
         float posY = (height() - pos.y() - _offsetY) / _scale;
 
         _scene.addNode(std::make_unique<NodeView>(posX, posY, Colors::LIGHT_BLUE));
     });
     menu.addAction("Add edge", this, [](){  });
-    menu.addAction("Clear nodes", this, [this](){ _scene.clearNodes(); });
+
+    menu.addAction("Clear nodes", this, [this]() {
+        _scene.clearNodes();
+    });
+
     menu.addAction("Clear edges", this, [](){  });
+
     menu.addAction("Clear", this, [](){  });
 
     menu.exec(mapToGlobal(pos));
 
     update();
+}
+
+QPointF Grid::screenToScenePos(const QPointF& point) const
+{
+    float x = (point.x() - _offsetX) / _scale;
+    float y = (height() - point.y() - _offsetY) / _scale;
+
+    return QPointF(x, y);
 }
 
 void Grid::paintEvent(QPaintEvent* event)
@@ -124,11 +119,33 @@ void Grid::mousePressEvent(QMouseEvent* event)
 {
     if (event->button() == Qt::LeftButton)
     {
-        //TODO - if event->pos() in selectionRectangle
+        if (_selectedItems._drawRectangle)
+        {
+            QPointF scenePos = screenToScenePos(event->pos());
+            QRectF selectedItemsRect{_selectedItems._rectStart, _selectedItems._rectEnd};
+            selectedItemsRect = selectedItemsRect.normalized();
 
-        _selectionManager.setDrawRectangle(true);
-        _selectionManager.setRectStart(event->pos());
-        _selectionManager.setRectEnd(event->pos());
+            if (selectedItemsRect.contains(scenePos))
+            {
+                _moveItemsEvent = true;
+                _lastMousePos   = event->pos();
+
+                setCursor(Qt::ClosedHandCursor);
+            }
+            else
+            {
+                _selectedItems._drawRectangle      = false;
+                _selectionRectangle._drawRectangle = true;
+                _selectionRectangle._rectStart     = event->pos();
+                _selectionRectangle._rectEnd       = event->pos();
+            }
+        }
+        else
+        {
+            _selectionRectangle._drawRectangle = true;
+            _selectionRectangle._rectStart     = event->pos();
+            _selectionRectangle._rectEnd       = event->pos();
+        }
     }
     else if (event->button() == Qt::MiddleButton)
     {
@@ -140,17 +157,28 @@ void Grid::mousePressEvent(QMouseEvent* event)
     }
 }
 
-void Grid::mouseReleaseEvent(QMouseEvent *event)
+void Grid::mouseReleaseEvent(QMouseEvent* event)
 {
-    const SceneOffsets sceneOffsets{
-        _offsetX,
-        _offsetY,
-        _scale,
-        static_cast<float>(height())
-    };
+    if (event->button() == Qt::LeftButton)
+    {
+        if (!_moveItemsEvent)
+        {
+            const SceneOffsets sceneOffsets{
+                _offsetX,
+                _offsetY,
+                _scale,
+                static_cast<float>(height())
+            };
 
-    _scene.handleSelection(_selectionManager, sceneOffsets);
-    _selectionManager.setDrawRectangle(false);
+            _selectedItems                     = _scene.handleSelection(_selectionRectangle, sceneOffsets);
+            _selectionRectangle._drawRectangle = false;
+        }
+        else
+        {
+            _moveItemsEvent = false;
+            unsetCursor();
+        }
+    }
 
     update();
 }
@@ -159,7 +187,23 @@ void Grid::mouseMoveEvent(QMouseEvent* event)
 {
     if (event->buttons() & Qt::LeftButton)
     {
-        _selectionManager.setRectEnd(event->pos());
+        if (_moveItemsEvent)
+        {
+            const QPointF delta       = (event->pos() - _lastMousePos) / _scale;
+            _selectedItems._rectStart += QPointF(delta.x(), -delta.y());
+            _selectedItems._rectEnd   += QPointF(delta.x(), -delta.y());
+
+            for (auto& item : _scene.selectedItems())
+            {
+                item->move(delta);
+            }
+
+            _lastMousePos = event->pos();
+        }
+        else
+        {
+            _selectionRectangle._rectEnd = event->pos();
+        }
     }
     else if (event->buttons() & Qt::MiddleButton)
     {

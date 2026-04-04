@@ -1,7 +1,8 @@
 #include "NodeView.h"
 
 
-void NodeView::move()
+void NodeView::move(const QPointF& delta)
 {
-    //TODO
+    _posX += delta.x();
+    _posY -= delta.y();
 }
