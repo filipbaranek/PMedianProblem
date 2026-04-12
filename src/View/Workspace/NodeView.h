@@ -2,49 +2,32 @@
 #define NODEVIEW_H
 
 #include <set>
-#include <QColor>
-#include <QPointF>
+#include <QGraphicsEllipseItem>
+#include <QBrush>
+#include <QPen>
 
-class NodeView
+class EdgeView;
+
+class NodeView : public QGraphicsEllipseItem
 {
 public:
-    NodeView(int id, float posX, float posY, const QColor& color)
-        : _id(id), _posX(posX), _posY(posY), _color(color)
-    { }
+    NodeView(int id, float x, float y, float radius = 30.0f, QGraphicsItem* parent = nullptr);
 
-    inline const int& id() const { return _id; }
+    int id() const { return _id; }
 
-    inline const float& posX() const { return _posX; }
+    void connectNode(NodeView* node) { _connectedNodes.insert(node); }
 
-    inline void setPosX(const float& posX) { _posX = posX; }
+    bool isConnectedTo(NodeView* node) const { return _connectedNodes.contains(node); }
 
-    inline const float& posY() const { return _posY; }
+    void addEdge(EdgeView* edge) { _edges.insert(edge); }
 
-    inline void setPosY(const float& posY) { _posY = posY; }
-
-    inline const QColor& color() const { return _color; }
-
-    inline void setColor(const QColor& color) { _color = color; }
-
-    inline const bool& selected() const { return _selected; }
-
-    inline void setSelected(const bool& selected) { _selected = selected; }
-
-    inline void connectNode(const int& node) { _connectedNodes.insert(node); }
-
-    inline bool isNodeConnectedTo(const int& node) { return _connectedNodes.contains(node); }
-
-    inline constexpr const int radius() { return 30; }
-
-    void move(const QPointF& delta);
+protected:
+    QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
-    int           _id;
-    float         _posX;
-    float         _posY;
-    bool          _selected;
-    QColor        _color;
-    std::set<int> _connectedNodes;
+    int                 _id;
+    std::set<NodeView*> _connectedNodes;
+    std::set<EdgeView*> _edges;
 };
 
 #endif // NODEVIEW_H

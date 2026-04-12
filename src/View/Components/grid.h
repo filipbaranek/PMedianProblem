@@ -1,33 +1,23 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <QWidget>
-#include <QtGui>
+#include <QGraphicsView>
+#include <QGraphicsScene>
+#include <QWheelEvent>
 #include <QMenu>
-#include "../Workspace/SelectionManager.h"
-#include "../Workspace/Scene.h"
+#include <QCursor>
+#include "../Workspace/NodeView.h"
 
-class Grid : public QWidget
+class Grid : public QGraphicsView
 {
+    Q_OBJECT
 public:
-    explicit Grid(QWidget* parrent = nullptr)
-        : QWidget(parrent), _offsetX{}, _offsetY{},
-          _scale(1.0f), _moveItemsEvent{}, _edgeEventActive{}
-    { }
-
-private:
-    void drawGrid(QPainter& painter, const QRectF& window);
-
-    void drawScene(QPainter& painter);
-
-    void drawSelectionRectangle(QPainter& painter);
-
-    void showContextMenu(const QPoint& pos);
-
-    QPointF screenToScenePos(const QPointF& point) const;
+    explicit Grid(QWidget* parent = nullptr);
 
 protected:
-    void paintEvent(QPaintEvent* event) override;
+    void wheelEvent(QWheelEvent* event) override;
+
+    void contextMenuEvent(QContextMenuEvent* event) override;
 
     void mousePressEvent(QMouseEvent* event) override;
 
@@ -35,22 +25,19 @@ protected:
 
     void mouseMoveEvent(QMouseEvent* event) override;
 
-    void wheelEvent(QWheelEvent* event) override;
+private:
+    NodeView* findNodeAt(const QPointF& pos);
+
+    void addNodeAt(const QPointF& pos);
+
+    void addEdgeBetween(NodeView* from, NodeView* to);
 
 private:
-    SelectionRectangle _selectionRectangle;
-    SelectionRectangle _selectedItems;
-    Scene              _scene;
-    QPointF            _lastMousePos;
-    float              _offsetX;
-    float              _offsetY;
-    float              _scale;
-    bool               _euclideanDistance;
-    bool               _moveItemsEvent;
-    bool               _createEdgeEvent;
-    bool               _edgeEventActive;
-
-    static constexpr const int CELL_SIZE = 100;
+    QPoint          _lastMousePos;
+    QGraphicsScene* _scene;
+    NodeView*       _nodeFrom;
+    bool            _createEdgeEvent;
+    int             _nextNodeId;
 };
 
 #endif // GRID_H
