@@ -24,15 +24,16 @@ set(SOURCES
     src/View/Components/grid.h src/View/Components/grid.cpp
     src/View/Workspace/NodeView.cpp
     src/View/Workspace/EdgeView.cpp
+    src/View/Workspace/CreateEdgeEvent.cpp
 )
 
 set(HEADERS
-
     src/View/Workspace/NodeView.h
     src/View/mainwindow.h
     src/Common/Colors.h
     src/View/Workspace/EdgeView.h
     src/View/Workspace/GridScene.h
+    src/View/Workspace/CreateEdgeEvent.h
 )
 
 set(VIEWS

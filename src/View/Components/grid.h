@@ -6,7 +6,9 @@
 #include <QWheelEvent>
 #include <QMenu>
 #include <QCursor>
+#include <QScrollBar>
 #include "../Workspace/NodeView.h"
+#include "../Workspace/CreateEdgeEvent.h"
 
 class Grid : public QGraphicsView
 {
@@ -33,11 +35,10 @@ private:
     void addEdgeBetween(NodeView* from, NodeView* to);
 
 private:
-    QPoint          _lastMousePos;
-    QGraphicsScene* _scene;
-    NodeView*       _nodeFrom;
-    bool            _createEdgeEvent;
-    int             _nextNodeId;
+    QPoint           _lastMousePos;
+    CreateEdgeEvent* _edgeEvent;
+    QGraphicsScene*  _scene;
+    int              _nextNodeId;
 };
 
 #endif // GRID_H

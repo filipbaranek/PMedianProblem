@@ -1,11 +1,10 @@
 #include "grid.h"
 #include "../Workspace/EdgeView.h"
 #include "../Workspace/GridScene.h"
-#include <QScrollBar>
 
 Grid::Grid(QWidget* parent)
-    : QGraphicsView(parent), _scene(new GridScene(this)),
-      _nodeFrom{}, _createEdgeEvent{}, _nextNodeId{}
+    : QGraphicsView(parent), _edgeEvent(new CreateEdgeEvent()),
+      _scene(new GridScene(this)), _nextNodeId{}
 {
     setScene(_scene);
     setRenderHint(QPainter::Antialiasing);
@@ -14,6 +13,7 @@ Grid::Grid(QWidget* parent)
     verticalScrollBar()->hide();
 
     _scene->setSceneRect(-5000, -5000, 10000, 10000);
+    _scene->addItem(_edgeEvent);
 }
 
 void Grid::wheelEvent(QWheelEvent* event)
@@ -38,7 +38,9 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
     });
 
     menu.addAction("Add Edge", [this]() {
-        _createEdgeEvent = true;
+        _edgeEvent->reset();
+        _edgeEvent->setActive(true);
+        _edgeEvent->setVisible(true);
         setCursor(Qt::CrossCursor);
         setDragMode(QGraphicsView::NoDrag);
     });
@@ -53,11 +55,12 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
 
 void Grid::mousePressEvent(QMouseEvent* event)
 {
-    if (_createEdgeEvent)
+    if (_edgeEvent->isActive())
     {
-        if (event->button() == Qt::LeftButton && _createEdgeEvent)
+        if (event->button() == Qt::LeftButton)
         {
-            _nodeFrom = findNodeAt(mapToScene(event->pos()));
+            _edgeEvent->setPosFrom(mapToScene(event->pos()));
+            _edgeEvent->setPosTo(mapToScene(event->pos()));
         }
         return;
     }
@@ -73,19 +76,21 @@ void Grid::mousePressEvent(QMouseEvent* event)
 
 void Grid::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (_createEdgeEvent)
+    if (_edgeEvent->isActive() && event->button() == Qt::LeftButton)
     {
-        if (event->button() == Qt::LeftButton && _nodeFrom)
+        NodeView* nodeFrom = findNodeAt(_edgeEvent->posFrom());
+        if (nodeFrom)
         {
             NodeView* nodeTo = findNodeAt(mapToScene(event->pos()));
             if (nodeTo)
             {
-                addEdgeBetween(_nodeFrom, nodeTo);
+                addEdgeBetween(nodeFrom, nodeTo);
             }
         }
+        _edgeEvent->setActive(false);
+        _edgeEvent->setVisible(false);
     }
 
-    _createEdgeEvent = false;
     unsetCursor();
     setDragMode(QGraphicsView::RubberBandDrag);
 
@@ -94,6 +99,12 @@ void Grid::mouseReleaseEvent(QMouseEvent* event)
 
 void Grid::mouseMoveEvent(QMouseEvent* event)
 {
+    if (_edgeEvent->isActive() && event->buttons() & Qt::LeftButton)
+    {
+        _edgeEvent->setPosTo(mapToScene(event->pos()));
+        _edgeEvent->updatePos();
+        return;
+    }
     if (event->buttons() & Qt::MiddleButton)
     {
         if (!_lastMousePos.isNull())
