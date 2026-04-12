@@ -11,7 +11,7 @@ EdgeView::EdgeView(NodeView* from, NodeView* to, QGraphicsItem* parent)
     updatePosition();
 
     setPen(QPen(Qt::cyan, 2));
-    setFlag(QGraphicsItem::ItemIsMovable);
+    setFlag(QGraphicsItem::ItemIsSelectable);
     setZValue(-1);
 }
 

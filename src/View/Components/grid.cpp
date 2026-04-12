@@ -39,7 +39,6 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
 
     menu.addAction("Add Edge", [this]() {
         _edgeEvent->reset();
-        _edgeEvent->setActive(true);
         _edgeEvent->setVisible(true);
         setCursor(Qt::CrossCursor);
         setDragMode(QGraphicsView::NoDrag);
@@ -55,7 +54,7 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
 
 void Grid::mousePressEvent(QMouseEvent* event)
 {
-    if (_edgeEvent->isActive())
+    if (_edgeEvent->isVisible())
     {
         if (event->button() == Qt::LeftButton)
         {
@@ -76,7 +75,7 @@ void Grid::mousePressEvent(QMouseEvent* event)
 
 void Grid::mouseReleaseEvent(QMouseEvent* event)
 {
-    if (_edgeEvent->isActive() && event->button() == Qt::LeftButton)
+    if (_edgeEvent->isVisible() && event->button() == Qt::LeftButton)
     {
         NodeView* nodeFrom = findNodeAt(_edgeEvent->posFrom());
         if (nodeFrom)
@@ -87,19 +86,18 @@ void Grid::mouseReleaseEvent(QMouseEvent* event)
                 addEdgeBetween(nodeFrom, nodeTo);
             }
         }
-        _edgeEvent->setActive(false);
         _edgeEvent->setVisible(false);
+        setDragMode(QGraphicsView::RubberBandDrag);
     }
 
     unsetCursor();
-    setDragMode(QGraphicsView::RubberBandDrag);
 
     QGraphicsView::mouseReleaseEvent(event);
 }
 
 void Grid::mouseMoveEvent(QMouseEvent* event)
 {
-    if (_edgeEvent->isActive() && event->buttons() & Qt::LeftButton)
+    if (_edgeEvent->isVisible() && event->buttons() & Qt::LeftButton)
     {
         _edgeEvent->setPosTo(mapToScene(event->pos()));
         _edgeEvent->updatePos();
@@ -118,6 +116,65 @@ void Grid::mouseMoveEvent(QMouseEvent* event)
     }
 
     QGraphicsView::mouseMoveEvent(event);
+}
+
+void Grid::keyPressEvent(QKeyEvent* event)
+{
+    if (event->key() == Qt::Key_Delete)
+    {
+        //NEED TO FIGURE OUT HOW TO NOT DELETE TWICE
+
+        if (_scene->selectedItems().empty())
+        {
+            return;
+        }
+
+        for (auto& item : _scene->selectedItems())
+        {
+            auto* node = dynamic_cast<NodeView*>(item);
+            if (node)
+            {
+                deleteNode(node);
+                continue;
+            }
+            auto* edge = dynamic_cast<EdgeView*>(item);
+            if (edge)
+            {
+                deleteEdge(edge);
+                continue;
+            }
+        }
+        return;
+    }
+
+    QGraphicsView::keyPressEvent(event);
+}
+
+void Grid::deleteNode(NodeView* node)
+{
+    for (auto& edge : node->edges())
+    {
+        _scene->removeItem(edge);
+
+        const auto* connectedNode = edge->from() != node ? edge->from() : edge->to();
+        connectedNode->disconnectNode(node);
+        connectedNode->removeEdge(edge);
+
+        delete edge;
+
+    }
+
+    _scene->removeItem(node);
+    delete node;
+}
+
+void Grid::deleteEdge(EdgeView* edge)
+{
+    edge->to()->disconnectNode(edge->from());
+    edge->from()->disconnectNode(edge->to());
+
+    _scene->removeItem(edge);
+    delete edge;
 }
 
 NodeView* Grid::findNodeAt(const QPointF &pos)

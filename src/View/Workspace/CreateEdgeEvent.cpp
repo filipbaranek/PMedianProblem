@@ -3,6 +3,7 @@
 CreateEdgeEvent::CreateEdgeEvent(QGraphicsItem* parent)
     : QGraphicsLineItem(parent)
 {
+    setVisible(false);
     setPen(QPen(Qt::cyan, 2));
     setZValue(-1);
 }

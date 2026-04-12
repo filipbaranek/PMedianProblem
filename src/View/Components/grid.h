@@ -27,12 +27,18 @@ protected:
 
     void mouseMoveEvent(QMouseEvent* event) override;
 
+    void keyPressEvent(QKeyEvent* event) override;
+
 private:
     NodeView* findNodeAt(const QPointF& pos);
 
     void addNodeAt(const QPointF& pos);
 
     void addEdgeBetween(NodeView* from, NodeView* to);
+
+    void deleteNode(NodeView* node);
+
+    void deleteEdge(EdgeView* edge);
 
 private:
     QPoint           _lastMousePos;
