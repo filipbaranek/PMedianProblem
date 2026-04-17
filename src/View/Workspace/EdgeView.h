@@ -11,13 +11,19 @@ public:
 
     void updatePosition();
 
-    const NodeView* from() const { return _from; }
+    NodeView* from() const
+    {
+        return _from;
+    }
 
-    const NodeView* to() const { return _to; }
+    NodeView* to() const
+    {
+        return _to;
+    }
 
 private:
-    const NodeView* _from;
-    const NodeView* _to;
+    NodeView* _from;
+    NodeView* _to;
 };
 
 #endif // EDGEVIEW_H

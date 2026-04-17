@@ -21,7 +21,7 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
 set(SOURCES
     src/main.cpp
     src/View/mainwindow.cpp
-    src/View/Components/grid.h src/View/Components/grid.cpp
+    src/View/Components/grid.cpp
     src/View/Workspace/NodeView.cpp
     src/View/Workspace/EdgeView.cpp
     src/View/Workspace/CreateEdgeEvent.cpp
@@ -30,7 +30,7 @@ set(SOURCES
 set(HEADERS
     src/View/Workspace/NodeView.h
     src/View/mainwindow.h
-    src/Common/Colors.h
+    src/View/Components/grid.h
     src/View/Workspace/EdgeView.h
     src/View/Workspace/GridScene.h
     src/View/Workspace/CreateEdgeEvent.h

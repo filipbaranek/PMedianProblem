@@ -1,6 +1,7 @@
 #ifndef GRID_H
 #define GRID_H
 
+#include <functional>
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QWheelEvent>
@@ -30,6 +31,20 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 private:
+    template<typename T>
+    void removeItems(std::function<void(T*)> removeCallback)
+    {
+        for (auto* item : _scene->selectedItems())
+        {
+            auto* derived = dynamic_cast<T*>(item);
+            if (!derived)
+            {
+                continue;
+            }
+            removeCallback(derived);
+        }
+    }
+
     NodeView* findNodeAt(const QPointF& pos);
 
     void addNodeAt(const QPointF& pos);

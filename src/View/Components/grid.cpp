@@ -122,28 +122,16 @@ void Grid::keyPressEvent(QKeyEvent* event)
 {
     if (event->key() == Qt::Key_Delete)
     {
-        //NEED TO FIGURE OUT HOW TO NOT DELETE TWICE
-
         if (_scene->selectedItems().empty())
         {
             return;
         }
-
-        for (auto& item : _scene->selectedItems())
-        {
-            auto* node = dynamic_cast<NodeView*>(item);
-            if (node)
-            {
-                deleteNode(node);
-                continue;
-            }
-            auto* edge = dynamic_cast<EdgeView*>(item);
-            if (edge)
-            {
-                deleteEdge(edge);
-                continue;
-            }
-        }
+        removeItems<EdgeView>([this](EdgeView* edge) {
+            deleteEdge(edge);
+        });
+        removeItems<NodeView>([this](NodeView* node) {
+            deleteNode(node);
+        });
         return;
     }
 
@@ -152,16 +140,16 @@ void Grid::keyPressEvent(QKeyEvent* event)
 
 void Grid::deleteNode(NodeView* node)
 {
-    for (auto& edge : node->edges())
+    for (auto* edge : node->edges())
     {
         _scene->removeItem(edge);
 
-        const auto* connectedNode = edge->from() != node ? edge->from() : edge->to();
+        auto* connectedNode = edge->from() != node ? edge->from() : edge->to();
         connectedNode->disconnectNode(node);
         connectedNode->removeEdge(edge);
+        node->removeEdge(edge);
 
         delete edge;
-
     }
 
     _scene->removeItem(node);
@@ -172,12 +160,14 @@ void Grid::deleteEdge(EdgeView* edge)
 {
     edge->to()->disconnectNode(edge->from());
     edge->from()->disconnectNode(edge->to());
+    edge->to()->removeEdge(edge);
+    edge->from()->removeEdge(edge);
 
     _scene->removeItem(edge);
     delete edge;
 }
 
-NodeView* Grid::findNodeAt(const QPointF &pos)
+NodeView* Grid::findNodeAt(const QPointF& pos)
 {
     NodeView* foundNode{};
     for (auto& node : _scene->items(pos))
