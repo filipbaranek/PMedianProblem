@@ -7,7 +7,7 @@
 class GridScene : public QGraphicsScene
 {
 public:
-    GridScene(QObject* parent = nullptr) : QGraphicsScene(parent) { }
+    explicit GridScene(QObject* parent = nullptr) : QGraphicsScene(parent) { }
 
 protected:
     void drawBackground(QPainter* painter, const QRectF& rect) override

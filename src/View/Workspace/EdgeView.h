@@ -12,6 +12,14 @@ public:
 
     void updatePosition();
 
+    void setFrom(const QString& from);
+
+    void setUseEuclideanDistance(const bool& useEuclideanDistance);
+
+    void setIsValid(const bool& isValid);
+
+    void setIsOriented(const bool& isOriented);
+
     NodeView* from() const
     {
         return _from;
@@ -22,9 +30,32 @@ public:
         return _to;
     }
 
+    const bool& useEuclideanDistance() const
+    {
+        return _useEuclideanDistance;
+    }
+
+    const bool& isValid() const
+    {
+        return _isValid;
+    }
+
+    const bool& isOriented() const
+    {
+        return _isOriented;
+    }
+
+protected:
+    // QRectF boundingRect() const override;
+
+    void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
+
 private:
     NodeView* _from;
     NodeView* _to;
+    bool      _useEuclideanDistance;
+    bool      _isValid;
+    bool      _isOriented;
 };
 
 #endif // EDGEVIEW_H

@@ -6,6 +6,7 @@
 class NodeView;
 class QLineEdit;
 class QComboBox;
+class QPushButton;
 
 class NodeEditDialog : public QDialog
 {
@@ -14,13 +15,22 @@ class NodeEditDialog : public QDialog
 public:
     explicit NodeEditDialog(NodeView* node, QWidget* parent = nullptr);
 
+private:
+    void initUI();
+
+    void loadFromEdge();
+
+    void initConnections();
+
 private slots:
     void updateNode();
 
 private:
-    NodeView*  _node;
-    QLineEdit* _name;
-    QComboBox* _type;
+    NodeView*    _node;
+    QLineEdit*   _name;
+    QComboBox*   _type;
+    QPushButton* _okBtn;
+    QPushButton* _cancelBtn;
 };
 
 #endif // EDITNODE_H

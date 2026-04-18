@@ -4,6 +4,7 @@
 #include "../Workspace/NodeView.h"
 #include "../Workspace/CreateEdgeEvent.h"
 #include "../editnode.h"
+#include "../editedge.h"
 #include <functional>
 #include <QGraphicsScene>
 #include <QWheelEvent>
@@ -137,7 +138,8 @@ void Grid::mousePressEvent(QMouseEvent* event)
             QMenu edgeMenu;
 
             edgeMenu.addAction("Edit edge", [this, &foundEdge]() {
-                //TODO
+                EdgeEditDialog dialog(foundEdge, this);
+                dialog.exec();
             });
 
             edgeMenu.addAction("Remove edge", [this, &foundEdge]() {

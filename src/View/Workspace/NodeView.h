@@ -66,6 +66,11 @@ public:
         return _edges;
     }
 
+    constexpr const float radius() const
+    {
+        return RADIUS;
+    }
+
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
