@@ -2,7 +2,8 @@
 #define EDGEVIEW_H
 
 #include <QGraphicsItem>
-#include "NodeView.h"
+
+class NodeView;
 
 class EdgeView : public QGraphicsLineItem
 {

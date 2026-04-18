@@ -1,4 +1,5 @@
 #include "EdgeView.h"
+#include "NodeView.h"
 #include <QPainter>
 #include <QPen>
 

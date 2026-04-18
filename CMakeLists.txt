@@ -46,6 +46,7 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
+    src/Common/NodeType.h
 )
 
 target_link_libraries(PMedianProblem PRIVATE

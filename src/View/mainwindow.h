@@ -2,9 +2,6 @@
 #define MAINWINDOW_H
 
 #include <QMainWindow>
-#include <QVBoxLayout>
-#include "ui_mainwindow.h"
-#include "Components/grid.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui {

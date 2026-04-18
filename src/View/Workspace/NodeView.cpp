@@ -1,6 +1,8 @@
 #include "NodeView.h"
 #include "EdgeView.h"
 #include <QGraphicsSceneMouseEvent>
+#include <QBrush>
+#include <QPen>
 
 namespace
 {
@@ -13,7 +15,8 @@ namespace
 } // namespace
 
 NodeView::NodeView(int id, float x, float y, const QString& name, QGraphicsItem* parent)
-    : QGraphicsEllipseItem(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2, parent), _id(id)
+    : QGraphicsEllipseItem(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2, parent),
+      _id(id), _type(NodeType::CUSTOMER)
 {
     _name = !name.isEmpty() ? name : QString::number(id);
     _label = new QGraphicsTextItem(_name, this);
@@ -27,11 +30,24 @@ NodeView::NodeView(int id, float x, float y, const QString& name, QGraphicsItem*
     setZValue(1);
 }
 
-void NodeView::setName(const QString &name)
+void NodeView::setName(const QString& name)
 {
     _name = name;
     _label->setPlainText(_name);
     setupLabel(_label, boundingRect());
+}
+
+void NodeView::setNodeType(const NodeType& type)
+{
+    _type = type;
+    if (type == NodeType::STORAGE)
+    {
+        setBrush(Qt::red);
+    }
+    else
+    {
+        setBrush(Qt::blue);
+    }
 }
 
 QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)

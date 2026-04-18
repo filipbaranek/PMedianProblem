@@ -1,4 +1,5 @@
 #include "CreateEdgeEvent.h"
+#include <QPen>
 
 CreateEdgeEvent::CreateEdgeEvent(QGraphicsItem* parent)
     : QGraphicsLineItem(parent)

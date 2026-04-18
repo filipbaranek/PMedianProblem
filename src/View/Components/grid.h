@@ -1,15 +1,11 @@
 #ifndef GRID_H
 #define GRID_H
 
-#include <functional>
 #include <QGraphicsView>
-#include <QGraphicsScene>
-#include <QWheelEvent>
-#include <QMenu>
-#include <QCursor>
-#include <QScrollBar>
-#include "../Workspace/NodeView.h"
-#include "../Workspace/CreateEdgeEvent.h"
+
+class NodeView;
+class EdgeView;
+class CreateEdgeEvent;
 
 class Grid : public QGraphicsView
 {

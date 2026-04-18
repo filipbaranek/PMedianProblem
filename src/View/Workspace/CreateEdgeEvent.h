@@ -2,7 +2,6 @@
 #define CREATEEDGEEVENT_H
 
 #include <QGraphicsLineItem>
-#include <QPen>
 
 class CreateEdgeEvent : public QGraphicsLineItem
 {

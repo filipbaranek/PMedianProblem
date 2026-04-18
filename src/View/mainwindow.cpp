@@ -1,4 +1,7 @@
 #include "mainwindow.h"
+#include "ui_mainwindow.h"
+#include "Components/grid.h"
+#include <QVBoxLayout>
 
 MainWindow::MainWindow(QWidget* parent)
     : QMainWindow(parent) , _ui(new Ui::MainWindow)

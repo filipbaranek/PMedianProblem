@@ -3,8 +3,7 @@
 
 #include <set>
 #include <QGraphicsEllipseItem>
-#include <QBrush>
-#include <QPen>
+#include "../../Common/NodeType.h"
 
 class EdgeView;
 
@@ -24,6 +23,13 @@ public:
     }
 
     void setName(const QString& name);
+
+    const NodeType& nodeType() const
+    {
+        return _type;
+    }
+
+    void setNodeType(const NodeType& type);
 
     void connectNode(NodeView* node)
     {
@@ -66,6 +72,7 @@ protected:
 private:
     int                 _id;
     QString             _name;
+    NodeType            _type;
     QGraphicsTextItem*  _label;
     std::set<EdgeView*> _edges;
     std::set<NodeView*> _connectedNodes;

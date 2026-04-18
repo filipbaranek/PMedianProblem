@@ -1,7 +1,15 @@
 #include "grid.h"
 #include "../Workspace/EdgeView.h"
 #include "../Workspace/GridScene.h"
+#include "../Workspace/NodeView.h"
+#include "../Workspace/CreateEdgeEvent.h"
 #include "../editnode.h"
+#include <functional>
+#include <QGraphicsScene>
+#include <QWheelEvent>
+#include <QMenu>
+#include <QCursor>
+#include <QScrollBar>
 
 namespace
 {

@@ -2,8 +2,10 @@
 #define EDITNODE_H
 
 #include <QDialog>
-#include <QLineEdit>
-#include "Workspace/NodeView.h"
+
+class NodeView;
+class QLineEdit;
+class QComboBox;
 
 class NodeEditDialog : public QDialog
 {
@@ -18,6 +20,7 @@ private slots:
 private:
     NodeView*  _node;
     QLineEdit* _name;
+    QComboBox* _type;
 };
 
 #endif // EDITNODE_H
