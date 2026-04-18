@@ -11,12 +11,19 @@ class EdgeView;
 class NodeView : public QGraphicsEllipseItem
 {
 public:
-    NodeView(int id, float x, float y, float radius = 30.0f, QGraphicsItem* parent = nullptr);
+    NodeView(int id, float x, float y, const QString& name = {}, QGraphicsItem* parent = nullptr);
 
     int id() const
     {
         return _id;
     }
+
+    const QString& name() const
+    {
+        return _name;
+    }
+
+    void setName(const QString& name);
 
     void connectNode(NodeView* node)
     {
@@ -57,9 +64,13 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
-    int                       _id;
-    std::set<EdgeView*>       _edges;
+    int                 _id;
+    QString             _name;
+    QGraphicsTextItem*  _label;
+    std::set<EdgeView*> _edges;
     std::set<NodeView*> _connectedNodes;
+
+    static constexpr float RADIUS = 30.0f;
 };
 
 #endif // NODEVIEW_H

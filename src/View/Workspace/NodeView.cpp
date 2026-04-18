@@ -2,14 +2,22 @@
 #include "EdgeView.h"
 #include <QGraphicsSceneMouseEvent>
 
-NodeView::NodeView(int id, float x, float y, float radius, QGraphicsItem* parent)
-    : QGraphicsEllipseItem(x - radius, y - radius, radius * 2, radius * 2, parent), _id(id)
+namespace
 {
-    auto* text = new QGraphicsTextItem(QString::number(_id), this);
-    QRectF rect = boundingRect();
-    QRectF textRect = text->boundingRect();
-    text->setDefaultTextColor(Qt::white);
-    text->setPos(rect.center().x() - textRect.width() / 2, rect.center().y() - textRect.height() / 2);
+    void setupLabel(QGraphicsTextItem* label, const QRectF& rect)
+    {
+        QRectF textRect = label->boundingRect();
+        label->setDefaultTextColor(Qt::white);
+        label->setPos(rect.center().x() - textRect.width() / 2, rect.center().y() - textRect.height() / 2);
+    }
+} // namespace
+
+NodeView::NodeView(int id, float x, float y, const QString& name, QGraphicsItem* parent)
+    : QGraphicsEllipseItem(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2, parent), _id(id)
+{
+    _name = !name.isEmpty() ? name : QString::number(id);
+    _label = new QGraphicsTextItem(_name, this);
+    setupLabel(_label, boundingRect());
 
     setBrush(Qt::blue);
     setPen(QPen(Qt::black));
@@ -17,6 +25,13 @@ NodeView::NodeView(int id, float x, float y, float radius, QGraphicsItem* parent
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
     setZValue(1);
+}
+
+void NodeView::setName(const QString &name)
+{
+    _name = name;
+    _label->setPlainText(_name);
+    setupLabel(_label, boundingRect());
 }
 
 QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)

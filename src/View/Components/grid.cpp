@@ -1,6 +1,39 @@
 #include "grid.h"
 #include "../Workspace/EdgeView.h"
 #include "../Workspace/GridScene.h"
+#include "../editnode.h"
+
+namespace
+{
+    template<typename T>
+    void removeItems(QGraphicsScene* scene, std::function<void(T*)> removeCallback)
+    {
+        for (auto* item : scene->selectedItems())
+        {
+            auto* derived = dynamic_cast<T*>(item);
+            if (!derived)
+            {
+                continue;
+            }
+            removeCallback(derived);
+        }
+    }
+
+    template<typename T>
+    T* findItemAt(QGraphicsScene* scene, const QPointF& pos)
+    {
+        T* foundItem{};
+        for (auto& item : scene->items(pos))
+        {
+            foundItem = dynamic_cast<T*>(item);
+            if (foundItem)
+            {
+                break;
+            }
+        }
+        return foundItem;
+    }
+} // namespace
 
 Grid::Grid(QWidget* parent)
     : QGraphicsView(parent), _edgeEvent(new CreateEdgeEvent()),
@@ -69,6 +102,47 @@ void Grid::mousePressEvent(QMouseEvent* event)
         setCursor(Qt::ClosedHandCursor);
         return;
     }
+    if (event->button() == Qt::RightButton)
+    {
+        auto* foundNode = findItemAt<NodeView>(_scene, mapToScene(event->pos()));
+        if (foundNode != nullptr)
+        {
+            QMenu nodeMenu;
+
+            nodeMenu.addAction("Edit node", [this, &foundNode]() {
+                NodeEditDialog dialog(foundNode, this);
+                dialog.exec();
+            });
+
+            nodeMenu.addAction("Remove node", [this, &foundNode]() {
+                deleteNode(foundNode);
+            });
+
+            nodeMenu.exec(event->globalPosition().toPoint());
+
+            event->accept();
+            return;
+        }
+        auto* foundEdge = findItemAt<EdgeView>(_scene, mapToScene(event->pos()));
+        if (foundEdge != nullptr)
+        {
+            QMenu edgeMenu;
+
+            edgeMenu.addAction("Edit edge", [this, &foundEdge]() {
+                //TODO
+            });
+
+            edgeMenu.addAction("Remove edge", [this, &foundEdge]() {
+                deleteEdge(foundEdge);
+            });
+
+            edgeMenu.exec(event->globalPosition().toPoint());
+
+            event->accept();
+            return;
+        }
+        return;
+    }
 
     QGraphicsView::mousePressEvent(event);
 }
@@ -77,10 +151,10 @@ void Grid::mouseReleaseEvent(QMouseEvent* event)
 {
     if (_edgeEvent->isVisible() && event->button() == Qt::LeftButton)
     {
-        NodeView* nodeFrom = findNodeAt(_edgeEvent->posFrom());
+        NodeView* nodeFrom = findItemAt<NodeView>(_scene, _edgeEvent->posFrom());
         if (nodeFrom)
         {
-            NodeView* nodeTo = findNodeAt(mapToScene(event->pos()));
+            NodeView* nodeTo = findItemAt<NodeView>(_scene, mapToScene(event->pos()));
             if (nodeTo)
             {
                 addEdgeBetween(nodeFrom, nodeTo);
@@ -126,10 +200,10 @@ void Grid::keyPressEvent(QKeyEvent* event)
         {
             return;
         }
-        removeItems<EdgeView>([this](EdgeView* edge) {
+        removeItems<EdgeView>(_scene, [this](EdgeView* edge) {
             deleteEdge(edge);
         });
-        removeItems<NodeView>([this](NodeView* node) {
+        removeItems<NodeView>(_scene, [this](NodeView* node) {
             deleteNode(node);
         });
         return;
@@ -147,11 +221,9 @@ void Grid::deleteNode(NodeView* node)
         auto* connectedNode = edge->from() != node ? edge->from() : edge->to();
         connectedNode->disconnectNode(node);
         connectedNode->removeEdge(edge);
-        node->removeEdge(edge);
 
         delete edge;
     }
-
     _scene->removeItem(node);
     delete node;
 }
@@ -165,20 +237,6 @@ void Grid::deleteEdge(EdgeView* edge)
 
     _scene->removeItem(edge);
     delete edge;
-}
-
-NodeView* Grid::findNodeAt(const QPointF& pos)
-{
-    NodeView* foundNode{};
-    for (auto& node : _scene->items(pos))
-    {
-        foundNode = dynamic_cast<NodeView*>(node);
-        if (foundNode)
-        {
-            break;
-        }
-    }
-    return foundNode;
 }
 
 void Grid::addNodeAt(const QPointF& pos)

@@ -25,6 +25,7 @@ set(SOURCES
     src/View/Workspace/NodeView.cpp
     src/View/Workspace/EdgeView.cpp
     src/View/Workspace/CreateEdgeEvent.cpp
+    src/View/editnode.cpp
 )
 
 set(HEADERS
@@ -34,6 +35,7 @@ set(HEADERS
     src/View/Workspace/EdgeView.h
     src/View/Workspace/GridScene.h
     src/View/Workspace/CreateEdgeEvent.h
+    src/View/editnode.h
 )
 
 set(VIEWS
