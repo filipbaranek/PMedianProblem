@@ -55,6 +55,10 @@ target_link_libraries(PMedianProblem PRIVATE
     Qt${QT_VERSION_MAJOR}::Widgets
 )
 
+target_include_directories(PMedianProblem PRIVATE
+    ${CMAKE_SOURCE_DIR}/src/View/Components
+)
+
 set_target_properties(PMedianProblem PROPERTIES
     WIN32_EXECUTABLE TRUE
 )

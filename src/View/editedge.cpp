@@ -15,34 +15,38 @@ EdgeEditDialog::EdgeEditDialog(EdgeView* edge, QWidget* parent)
     initUI();
     loadFromEdge();
     initConnections();
+    updateOrientationLogic();
 }
 
 void EdgeEditDialog::initUI()
 {
-    auto* layout = new QFormLayout(this);
+    auto* mainLayout = new QVBoxLayout(this);
+    _layout          = new QFormLayout();
 
-    _isValid = new QCheckBox(this);
-    _isOriented = new QCheckBox(this);
+    _isValid              = new QCheckBox(this);
+    _isOriented           = new QCheckBox(this);
     _useEuclideanDistance = new QCheckBox(this);
+    _nodeFrom             = new QComboBox(this);
+    _nodeTo               = new QLabel(this);
 
-    _nodeFrom = new QComboBox(this);
-    _nodeTo   = new QLabel(this);
+    _layout->addRow("Valid:", _isValid);
+    _layout->addRow("Oriented:", _isOriented);
+    _layout->addRow("Euclidean distance:", _useEuclideanDistance);
+    _layout->addRow("Node from:", _nodeFrom);
+    _layout->addRow("Node to:", _nodeTo);
 
-    layout->addRow("Valid:", _isValid);
-    layout->addRow("Oriented:", _isOriented);
-    layout->addRow("Euclidean distance:", _useEuclideanDistance);
-    layout->addRow("Node from:", _nodeFrom);
-    layout->addRow("Node to:", _nodeTo);
+    mainLayout->addLayout(_layout);
+    mainLayout->addStretch(1);
 
-    auto* buttonLayout = new QHBoxLayout();
+    auto* button_layout = new QHBoxLayout();
+    _okBtn              = new QPushButton("OK");
+    _cancelBtn          = new QPushButton("Cancel");
+    button_layout->addWidget(_okBtn);
+    button_layout->addWidget(_cancelBtn);
 
-    _okBtn     = new QPushButton("OK");
-    _cancelBtn = new QPushButton("Cancel");
+    mainLayout->addLayout(button_layout);
 
-    buttonLayout->addWidget(_okBtn);
-    buttonLayout->addWidget(_cancelBtn);
-
-    layout->addRow(buttonLayout);
+    this->setMinimumHeight(200);
 }
 
 void EdgeEditDialog::loadFromEdge()
@@ -71,8 +75,15 @@ void EdgeEditDialog::initConnections()
             _nodeTo->setText(_edge->from()->name());
         }
     });
+    connect(_isOriented, &QCheckBox::checkStateChanged, this, &EdgeEditDialog::updateOrientationLogic);
     connect(_okBtn, &QPushButton::clicked, this, &EdgeEditDialog::updateEdge);
     connect(_cancelBtn, &QPushButton::clicked, this, &QDialog::reject);
+}
+
+void EdgeEditDialog::updateOrientationLogic()
+{
+    _layout->setRowVisible(_nodeFrom, _isOriented->isChecked());
+    _layout->setRowVisible(_nodeTo, _isOriented->isChecked());
 }
 
 void EdgeEditDialog::updateEdge()

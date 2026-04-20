@@ -11,8 +11,6 @@ EdgeView::EdgeView(NodeView* from, NodeView* to, QGraphicsItem* parent)
     _to->addEdge(this);
 
     updatePosition();
-
-    setFlag(QGraphicsItem::ItemIsSelectable);
     setZValue(-1);
 }
 
@@ -36,6 +34,9 @@ void EdgeView::setFrom(const QString& from)
     NodeView* temp = _from;
     _from = _to;
     _to = temp;
+
+    updatePosition();
+    update(boundingRect());
 }
 
 void EdgeView::setUseEuclideanDistance(const bool& useEuclideanDistance)
@@ -47,40 +48,40 @@ void EdgeView::setUseEuclideanDistance(const bool& useEuclideanDistance)
 
 void EdgeView::setIsValid(const bool& isValid)
 {
-    if (isValid)
-    {
-        setPen(QPen(Qt::cyan, 2));
-    }
-    else
-    {
-        setPen(QPen(Qt::red, 2));
-    }
-
     _isValid = isValid;
 }
 
 void EdgeView::setIsOriented(const bool& isOriented)
 {
     _isOriented = isOriented;
-    //TODO invalidate rect
+    update(boundingRect());
 }
 
-// QRectF EdgeView::boundingRect() const
-// {
-//     QPointF p1 = _from->sceneBoundingRect().center();
-//     QPointF p2 = _to->sceneBoundingRect().center();
+QRectF EdgeView::boundingRect() const
+{
+    QPointF p1 = _from->sceneBoundingRect().center();
+    QPointF p2 = _to->sceneBoundingRect().center();
 
-//     QRectF rect(p1, p2);
+    QRectF rect(p1, p2);
 
-//     const qreal extra = 50.0;
-//     return rect.normalized().adjusted(-extra, -extra, extra, extra);
-// }
+    static constexpr qreal extra = 50.0;
+    return rect.normalized().adjusted(-extra, -extra, extra, extra);
+}
 
 void EdgeView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)
 {
     QGraphicsLineItem::paint(painter, option, widget);
 
-    painter->setPen(QPen(Qt::cyan, 2));
+    QPen pen;
+    if (_isValid)
+    {
+        pen = QPen(Qt::cyan, 2);
+    }
+    else
+    {
+        pen = QPen(Qt::red, 2);
+    }
+    painter->setPen(pen);
     painter->drawLine(line());
 
     if (_isOriented)

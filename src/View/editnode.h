@@ -31,6 +31,8 @@ private:
     QComboBox*   _type;
     QPushButton* _okBtn;
     QPushButton* _cancelBtn;
+
+    //TODO POSITIONS
 };
 
 #endif // EDITNODE_H
