@@ -64,7 +64,20 @@
     <addaction name="actionOpen"/>
     <addaction name="actionSave_as"/>
    </widget>
+   <widget class="QMenu" name="menuAlgorithm">
+    <property name="title">
+     <string>Settings</string>
+    </property>
+    <addaction name="actionEuclidean_distance"/>
+   </widget>
+   <widget class="QMenu" name="menuHelp">
+    <property name="title">
+     <string>Help</string>
+    </property>
+   </widget>
    <addaction name="menuFile"/>
+   <addaction name="menuAlgorithm"/>
+   <addaction name="menuHelp"/>
   </widget>
   <widget class="QToolBar" name="toolBar">
    <property name="windowTitle">
@@ -112,6 +125,14 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionEuclidean_distance">
+   <property name="checkable">
+    <bool>true</bool>
+   </property>
+   <property name="text">
+    <string>Euclidean distance</string>
    </property>
   </action>
  </widget>

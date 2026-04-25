@@ -6,6 +6,7 @@
 #include <QLineEdit>
 #include <QComboBox>
 #include <QDoubleSpinBox>
+#include <QLabel>
 
 NodeEditDialog::NodeEditDialog(NodeView* node, QWidget* parent)
     :QDialog(parent), _node(node)
@@ -21,15 +22,18 @@ void NodeEditDialog::initUI()
 {
     auto* layout = new QFormLayout(this);
 
-    _name  = new QLineEdit(this);
-    _type  = new QComboBox(this);
-    _posX  = new QDoubleSpinBox(this);
-    _posY  = new QDoubleSpinBox(this);
+    _name               = new QLineEdit(this);
+    _type               = new QComboBox(this);
+    _posX               = new QDoubleSpinBox(this);
+    _posY               = new QDoubleSpinBox(this);
+    _variableParam      = new QDoubleSpinBox(this);
+    _variableParamLabel = new QLabel(this);
 
     layout->addRow("Name:", _name);
     layout->addRow("Type:", _type);
     layout->addRow("Pos X:", _posX);
     layout->addRow("Pos Y:", _posY);
+    layout->addRow(_variableParamLabel, _variableParam);
 
     auto* buttonLayout = new QHBoxLayout();
 
@@ -58,12 +62,28 @@ void NodeEditDialog::loadFromEdge()
     _posY->setMinimum(std::numeric_limits<double>::lowest());
     _posY->setMaximum(std::numeric_limits<double>::max());
     _posY->setValue(-_node->posY());
+
+    _variableParam->setValue(_node->variableParam());
+    updateVariableParams();
 }
 
 void NodeEditDialog::initConnections()
 {
+    connect(_type, &QComboBox::currentIndexChanged, this, &NodeEditDialog::updateVariableParams);
     connect(_cancelBtn, &QPushButton::clicked, this, &QDialog::reject);
     connect(_okBtn, &QPushButton::clicked, this, &NodeEditDialog::updateNode);
+}
+
+void NodeEditDialog::updateVariableParams()
+{
+    if (static_cast<NodeType>(_type->currentData().toInt()) == NodeType::CUSTOMER)
+    {
+        _variableParamLabel->setText("Demand");
+    }
+    else
+    {
+        _variableParamLabel->setText("Capacity");
+    }
 }
 
 void NodeEditDialog::updateNode()

@@ -16,7 +16,7 @@ namespace
 
 NodeView::NodeView(int id, float x, float y, const QString& name, QGraphicsItem* parent)
     : QGraphicsEllipseItem(-RADIUS, -RADIUS, RADIUS * 2, RADIUS * 2, parent),
-      _id(id), _type(NodeType::CUSTOMER), _posX(x), _posY(y)
+      _id(id), _type(NodeType::CUSTOMER), _posX(x), _posY(y), _variableParameter{}
 {
     setPos(x, y);
 

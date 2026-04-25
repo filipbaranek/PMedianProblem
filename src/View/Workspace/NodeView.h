@@ -51,6 +51,16 @@ public:
         return _posY;
     }
 
+    const double& variableParam() const
+    {
+        return _variableParameter;
+    }
+
+    void setVariableParam(const double variableParam)
+    {
+        _variableParameter = variableParam;
+    }
+
     void connectNode(NodeView* node)
     {
         _connectedNodes.insert(node);
@@ -95,11 +105,12 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
-    double              _posX;
-    double              _posY;
     int                 _id;
     QString             _name;
     NodeType            _type;
+    double              _posX;
+    double              _posY;
+    double              _variableParameter;
     QGraphicsTextItem*  _label;
     std::set<EdgeView*> _edges;
     std::set<NodeView*> _connectedNodes;

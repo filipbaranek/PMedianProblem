@@ -8,6 +8,7 @@ class QLineEdit;
 class QComboBox;
 class QPushButton;
 class QDoubleSpinBox;
+class QLabel;
 
 class NodeEditDialog : public QDialog
 {
@@ -24,6 +25,8 @@ private:
     void initConnections();
 
 private slots:
+    void updateVariableParams();
+
     void updateNode();
 
 private:
@@ -32,6 +35,8 @@ private:
     QComboBox*      _type;
     QDoubleSpinBox* _posX;
     QDoubleSpinBox* _posY;
+    QDoubleSpinBox* _variableParam;
+    QLabel*         _variableParamLabel;
     QPushButton*    _okBtn;
     QPushButton*    _cancelBtn;
 };
