@@ -30,6 +30,20 @@ protected:
         {
             painter->drawLine(rect.left(), y, rect.right(), y);
         }
+
+        QPen axisPen(Qt::black);
+        axisPen.setWidth(4);
+        painter->setPen(axisPen);
+
+        if (rect.left() <= 0 && rect.right() >= 0)
+        {
+            painter->drawLine(0, rect.top(), 0, rect.bottom());
+        }
+
+        if (rect.top() <= 0 && rect.bottom() >= 0)
+        {
+            painter->drawLine(rect.left(), 0, rect.right(), 0);
+        }
     }
 };
 

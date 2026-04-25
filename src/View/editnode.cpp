@@ -5,6 +5,7 @@
 #include <QPushButton>
 #include <QLineEdit>
 #include <QComboBox>
+#include <QDoubleSpinBox>
 
 NodeEditDialog::NodeEditDialog(NodeView* node, QWidget* parent)
     :QDialog(parent), _node(node)
@@ -20,11 +21,15 @@ void NodeEditDialog::initUI()
 {
     auto* layout = new QFormLayout(this);
 
-    _name = new QLineEdit(this);
-    _type = new QComboBox(this);
+    _name  = new QLineEdit(this);
+    _type  = new QComboBox(this);
+    _posX  = new QDoubleSpinBox(this);
+    _posY  = new QDoubleSpinBox(this);
 
     layout->addRow("Name:", _name);
     layout->addRow("Type:", _type);
+    layout->addRow("Pos X:", _posX);
+    layout->addRow("Pos Y:", _posY);
 
     auto* buttonLayout = new QHBoxLayout();
 
@@ -45,6 +50,14 @@ void NodeEditDialog::loadFromEdge()
     _type->addItem("Storage", static_cast<int32_t>(NodeType::STORAGE));
     int currentTypeIndex = _type->findData(static_cast<int32_t>(_node->nodeType()));
     _type->setCurrentIndex(currentTypeIndex);
+
+    _posX->setMinimum(std::numeric_limits<double>::lowest());
+    _posX->setMaximum(std::numeric_limits<double>::max());
+    _posX->setValue(_node->posX());
+
+    _posY->setMinimum(std::numeric_limits<double>::lowest());
+    _posY->setMaximum(std::numeric_limits<double>::max());
+    _posY->setValue(-_node->posY());
 }
 
 void NodeEditDialog::initConnections()
@@ -57,5 +70,7 @@ void NodeEditDialog::updateNode()
 {
     _node->setName(_name->text());
     _node->setNodeType(static_cast<NodeType>(_type->currentData().toInt()));
+    _node->setPosX(_posX->value());
+    _node->setPosY(-_posY->value());
     accept();
 }

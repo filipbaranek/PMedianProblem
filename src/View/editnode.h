@@ -7,6 +7,7 @@ class NodeView;
 class QLineEdit;
 class QComboBox;
 class QPushButton;
+class QDoubleSpinBox;
 
 class NodeEditDialog : public QDialog
 {
@@ -26,13 +27,13 @@ private slots:
     void updateNode();
 
 private:
-    NodeView*    _node;
-    QLineEdit*   _name;
-    QComboBox*   _type;
-    QPushButton* _okBtn;
-    QPushButton* _cancelBtn;
-
-    //TODO POSITIONS
+    NodeView*       _node;
+    QLineEdit*      _name;
+    QComboBox*      _type;
+    QDoubleSpinBox* _posX;
+    QDoubleSpinBox* _posY;
+    QPushButton*    _okBtn;
+    QPushButton*    _cancelBtn;
 };
 
 #endif // EDITNODE_H

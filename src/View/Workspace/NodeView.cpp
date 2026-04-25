@@ -15,9 +15,11 @@ namespace
 } // namespace
 
 NodeView::NodeView(int id, float x, float y, const QString& name, QGraphicsItem* parent)
-    : QGraphicsEllipseItem(x - RADIUS, y - RADIUS, RADIUS * 2, RADIUS * 2, parent),
-      _id(id), _type(NodeType::CUSTOMER)
+    : QGraphicsEllipseItem(-RADIUS, -RADIUS, RADIUS * 2, RADIUS * 2, parent),
+      _id(id), _type(NodeType::CUSTOMER), _posX(x), _posY(y)
 {
+    setPos(x, y);
+
     _name = !name.isEmpty() ? name : QString::number(id);
     _label = new QGraphicsTextItem(_name, this);
     setupLabel(_label, boundingRect());
@@ -54,6 +56,10 @@ QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)
 {
     if (change == ItemPositionChange)
     {
+        QPointF newPos = value.toPointF();
+        _posX = newPos.x();
+        _posY = newPos.y();
+
         for (auto& edge : _edges)
         {
             edge->updatePosition();

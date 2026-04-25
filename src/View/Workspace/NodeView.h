@@ -31,6 +31,26 @@ public:
 
     void setNodeType(const NodeType& type);
 
+    void setPosX(const double x)
+    {
+        setPos(x, _posY);
+    }
+
+    const double& posX() const
+    {
+        return _posX;
+    }
+
+    void setPosY(const double y)
+    {
+        setPos(_posX, y);
+    }
+
+    const double& posY() const
+    {
+        return _posY;
+    }
+
     void connectNode(NodeView* node)
     {
         _connectedNodes.insert(node);
@@ -75,6 +95,8 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
+    double              _posX;
+    double              _posY;
     int                 _id;
     QString             _name;
     NodeType            _type;
