@@ -3,7 +3,7 @@
 
 #include <set>
 #include <QGraphicsEllipseItem>
-#include "../../Common/NodeType.h"
+#include "../../Helpers/NodeType.h"
 
 class EdgeView;
 

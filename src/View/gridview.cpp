@@ -1,10 +1,10 @@
-#include "grid.h"
-#include "../Workspace/EdgeView.h"
-#include "../Workspace/GridScene.h"
-#include "../Workspace/NodeView.h"
-#include "../Workspace/CreateEdgeEvent.h"
-#include "../editnode.h"
-#include "../editedge.h"
+#include "gridview.h"
+#include "Workspace/EdgeView.h"
+#include "Workspace/GridScene.h"
+#include "Workspace/NodeView.h"
+#include "Workspace/CreateEdgeEvent.h"
+#include "editnodeview.h"
+#include "editedgeview.h"
 #include <functional>
 #include <QGraphicsScene>
 #include <QWheelEvent>
@@ -46,7 +46,7 @@ namespace
 
 Grid::Grid(QWidget* parent)
     : QGraphicsView(parent), _edgeEvent(new CreateEdgeEvent()),
-      _scene(new GridScene(this)), _nextNodeId{}
+      _scene(new GridScene(this)), _nextNodeId{}, _useEuclideanDistance(true)
 {
     setScene(_scene);
     setRenderHint(QPainter::Antialiasing);
@@ -222,6 +222,30 @@ void Grid::keyPressEvent(QKeyEvent* event)
     QGraphicsView::keyPressEvent(event);
 }
 
+void Grid::open()
+{
+    //TODO
+}
+
+void Grid::saveAs()
+{
+    //TODO
+}
+
+void Grid::setEuclideanMode(bool toggled)
+{
+    _useEuclideanDistance = toggled;
+
+    for (auto& item : _scene->items())
+    {
+        auto* edge = dynamic_cast<EdgeView*>(item);
+        if (edge)
+        {
+            edge->setUseEuclideanDistance(toggled);
+        }
+    }
+}
+
 void Grid::deleteNode(NodeView* node)
 {
     for (auto* edge : node->edges())
@@ -262,7 +286,7 @@ void Grid::addEdgeBetween(NodeView* from, NodeView* to)
         return;
     }
 
-    EdgeView* edge = new EdgeView(from, to);
+    EdgeView* edge = new EdgeView(from, to, _useEuclideanDistance);
 
     _scene->addItem(edge);
 

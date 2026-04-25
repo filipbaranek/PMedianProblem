@@ -21,23 +21,23 @@ find_package(Qt${QT_VERSION_MAJOR} REQUIRED COMPONENTS
 set(SOURCES
     src/main.cpp
     src/View/mainwindow.cpp
-    src/View/Components/grid.cpp
+    src/View/gridview.cpp
     src/View/Workspace/NodeView.cpp
     src/View/Workspace/EdgeView.cpp
     src/View/Workspace/CreateEdgeEvent.cpp
-    src/View/editnode.cpp
+    src/View/editnodeview.cpp
 )
 
 set(HEADERS
     src/View/Workspace/NodeView.h
     src/View/mainwindow.h
-    src/View/Components/grid.h
+    src/View/gridview.h
     src/View/Workspace/EdgeView.h
     src/View/Workspace/GridScene.h
     src/View/Workspace/CreateEdgeEvent.h
-    src/View/editnode.h
-    src/Common/NodeType.h
-    src/View/editedge.h
+    src/View/editnodeview.h
+    src/View/editedgeview.h
+    src/Helpers/NodeType.h
 )
 
 set(VIEWS
@@ -48,7 +48,7 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
-    src/View/editedge.cpp
+    src/View/editedgeview.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE
@@ -56,7 +56,7 @@ target_link_libraries(PMedianProblem PRIVATE
 )
 
 target_include_directories(PMedianProblem PRIVATE
-    ${CMAKE_SOURCE_DIR}/src/View/Components
+    ${CMAKE_SOURCE_DIR}/src/View
 )
 
 set_target_properties(PMedianProblem PROPERTIES

@@ -19,6 +19,8 @@ public:
     ~MainWindow() override;
 
 private:
+    void initConnections();
+
     Ui::MainWindow* _ui;
 };
 #endif // MAINWINDOW_H

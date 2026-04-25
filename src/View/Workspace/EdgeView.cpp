@@ -17,9 +17,9 @@ namespace
     }
 } // namespace
 
-EdgeView::EdgeView(NodeView* from, NodeView* to, QGraphicsItem* parent)
+EdgeView::EdgeView(NodeView* from, NodeView* to, bool useEuclideanDistance, QGraphicsItem* parent)
     : QGraphicsLineItem(parent), _from(from), _to(to),
-      _useEuclideanDistance(true), _isValid(true), _isOriented{}
+      _useEuclideanDistance(useEuclideanDistance), _isValid(true), _isOriented{}
 {
     _from->addEdge(this);
     _to->addEdge(this);

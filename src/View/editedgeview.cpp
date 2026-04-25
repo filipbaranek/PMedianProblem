@@ -1,4 +1,4 @@
-#include "editedge.h"
+#include "editedgeview.h"
 #include "Workspace/EdgeView.h"
 #include "Workspace/NodeView.h"
 #include <QCheckBox>

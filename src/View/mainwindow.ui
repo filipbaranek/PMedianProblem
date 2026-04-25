@@ -140,7 +140,7 @@
   <customwidget>
    <class>Grid</class>
    <extends>QGraphicsView</extends>
-   <header>grid.h</header>
+   <header>gridview.h</header>
   </customwidget>
  </customwidgets>
  <resources/>

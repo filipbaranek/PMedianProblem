@@ -26,6 +26,13 @@ protected:
 
     void keyPressEvent(QKeyEvent* event) override;
 
+public slots:
+    void open();
+
+    void saveAs();
+
+    void setEuclideanMode(bool toggled);
+
 private:
     void addNodeAt(const QPointF& pos);
 
@@ -40,6 +47,7 @@ private:
     CreateEdgeEvent* _edgeEvent;
     QGraphicsScene*  _scene;
     int              _nextNodeId;
+    bool             _useEuclideanDistance;
 };
 
 #endif // GRID_H

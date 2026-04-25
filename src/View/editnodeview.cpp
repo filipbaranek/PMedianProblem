@@ -1,6 +1,6 @@
-#include "editnode.h"
+#include "editnodeview.h"
 #include "Workspace/NodeView.h"
-#include "../Common/NodeType.h"
+#include "../Helpers/NodeType.h"
 #include <QFormLayout>
 #include <QPushButton>
 #include <QLineEdit>
@@ -9,7 +9,7 @@
 #include <QLabel>
 
 NodeEditDialog::NodeEditDialog(NodeView* node, QWidget* parent)
-    :QDialog(parent), _node(node)
+    : QDialog(parent), _node(node)
 {
     setWindowTitle("Edit node");
 

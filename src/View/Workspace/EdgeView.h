@@ -8,7 +8,7 @@ class NodeView;
 class EdgeView : public QGraphicsLineItem
 {
 public:
-    EdgeView(NodeView* from, NodeView* to, QGraphicsItem* parent = nullptr);
+    EdgeView(NodeView* from, NodeView* to, bool useEuclideanDistance, QGraphicsItem* parent = nullptr);
 
     void updatePosition();
 
