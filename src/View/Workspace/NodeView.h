@@ -4,11 +4,13 @@
 #include <set>
 #include <QGraphicsEllipseItem>
 #include "../../Common/nodetype.h"
+#include "../../Common/dtos.h"
+#include "../../Common/idata.h"
 
 class NodeViewBuilder;
 class EdgeView;
 
-class NodeView : public QGraphicsEllipseItem
+class NodeView : public QGraphicsEllipseItem, public IData<NodeData>
 {
 public:
     NodeView(QGraphicsItem* parent = nullptr);
@@ -48,6 +50,8 @@ public:
     void addEdge(EdgeView* edge);
 
     void removeEdge(EdgeView* edge);
+
+    NodeData toDTO() override;
 
     constexpr const float radius() const
     {

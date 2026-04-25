@@ -127,6 +127,20 @@ const double& EdgeView::distance() const
     return _distance;
 }
 
+EdgeData EdgeView::toDTO()
+{
+    EdgeData data{};
+
+    data._from                 = _from->id();
+    data._to                   = _to->id();
+    data._isValid              = _isValid;
+    data._isOriented           = _isOriented;
+    data._useEuclideanDistance = _useEuclideanDistance;
+    data._distance             = _distance;
+
+    return data;
+}
+
 QRectF EdgeView::boundingRect() const
 {
     QPointF p1 = _from->sceneBoundingRect().center();

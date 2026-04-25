@@ -1,7 +1,9 @@
 #ifndef GRID_H
 #define GRID_H
 
+#include <utility>
 #include <QGraphicsView>
+#include "../Common/dtos.h"
 
 class NodeView;
 class EdgeView;
@@ -27,7 +29,7 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 public slots:
-     // itemsToDTO();
+    std::pair<std::vector<NodeData>, std::vector<EdgeData>> itemsToDTO();
 
     void setEuclideanMode(bool toggled);
 

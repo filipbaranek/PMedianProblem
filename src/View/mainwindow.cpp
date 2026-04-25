@@ -1,9 +1,12 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
+#include "../ViewModel/gridviewmodel.h"
 #include <QVBoxLayout>
 
-MainWindow::MainWindow(QWidget* parent)
-    : QMainWindow(parent) , _ui(new Ui::MainWindow)
+MainWindow::MainWindow(GridViewModel* viewModel, QWidget* parent)
+    : QMainWindow(parent),
+      _ui(new Ui::MainWindow),
+      _viewModel(viewModel)
 {
     _ui->setupUi(this);
     _ui->actionEuclidean_distance->setChecked(true);
@@ -30,5 +33,10 @@ void MainWindow::openFile()
 
 void MainWindow::saveItemsAs()
 {
-    //TODO
+    auto items = _ui->graphicsView->itemsToDTO();
+
+    auto& nodes = items.first;
+    auto& edges = items.second;
+
+    _viewModel->saveItemsToFile(nodes, edges);
 }

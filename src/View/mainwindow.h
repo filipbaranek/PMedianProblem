@@ -9,12 +9,14 @@ class MainWindow;
 }
 QT_END_NAMESPACE
 
+class GridViewModel;
+
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
 
 public:
-    explicit MainWindow(QWidget* parent = nullptr);
+    explicit MainWindow(GridViewModel* fileManager, QWidget* parent = nullptr);
 
     ~MainWindow() override;
 
@@ -27,5 +29,6 @@ private:
     void initConnections();
 
     Ui::MainWindow* _ui;
+    GridViewModel*  _viewModel;
 };
 #endif // MAINWINDOW_H

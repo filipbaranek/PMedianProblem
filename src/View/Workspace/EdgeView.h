@@ -2,11 +2,13 @@
 #define EDGEVIEW_H
 
 #include <QGraphicsItem>
+#include "../../Common/dtos.h"
+#include "../../Common/idata.h"
 
 class EdgeViewBuilder;
 class NodeView;
 
-class EdgeView : public QGraphicsLineItem
+class EdgeView : public QGraphicsLineItem, public IData<EdgeData>
 {
 public:
     EdgeView(QGraphicsItem* parent = nullptr);
@@ -40,6 +42,8 @@ public:
     const bool& isOriented() const;
 
     const double& distance() const;
+
+    EdgeData toDTO() override;
 
     friend class EdgeViewBuilder;
 

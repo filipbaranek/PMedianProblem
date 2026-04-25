@@ -224,6 +224,30 @@ void Grid::keyPressEvent(QKeyEvent* event)
     QGraphicsView::keyPressEvent(event);
 }
 
+std::pair<std::vector<NodeData>, std::vector<EdgeData>> Grid::itemsToDTO()
+{
+    std::vector<NodeData> nodes;
+    std::vector<EdgeData> edges;
+
+    for (auto& item : _scene->items())
+    {
+        auto* node = dynamic_cast<NodeView*>(item);
+        if (node)
+        {
+            nodes.push_back(node->toDTO());
+            continue;
+        }
+        auto* edge = dynamic_cast<EdgeView*>(item);
+        if (edge)
+        {
+            edges.push_back(edge->toDTO());
+            continue;
+        }
+    }
+
+    return { nodes, edges };
+}
+
 void Grid::setEuclideanMode(bool toggled)
 {
     _useEuclideanDistance = toggled;

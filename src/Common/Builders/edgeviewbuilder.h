@@ -80,7 +80,7 @@ private:
     bool      _useEuclideanDistance{true};
     bool      _isValid{true};
     bool      _isOriented{};
-    double    _distance{-1};
+    double    _distance{};
 };
 
 #endif // EDGEVIEWBUILDER_H

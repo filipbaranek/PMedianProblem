@@ -131,6 +131,20 @@ void NodeView::removeEdge(EdgeView* edge)
     _edges.erase(edge);
 }
 
+NodeData NodeView::toDTO()
+{
+    NodeData data{};
+
+    data._id                = _id;
+    data._name              = _name;
+    data._posX              = _posX;
+    data._posY              = _posY;
+    data._type              = static_cast<int32_t>(_type);
+    data._variableParameter = _variableParameter;
+
+    return data;
+}
+
 QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)
 {
     if (change == ItemPositionChange)
