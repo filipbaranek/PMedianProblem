@@ -3,6 +3,8 @@
 #include "Workspace/GridScene.h"
 #include "Workspace/NodeView.h"
 #include "Workspace/CreateEdgeEvent.h"
+#include "../Common/Builders/edgeviewbuilder.h"
+#include "../Common/Builders/nodeviewbuilder.h"
 #include "editnodeview.h"
 #include "editedgeview.h"
 #include <functional>
@@ -222,16 +224,6 @@ void Grid::keyPressEvent(QKeyEvent* event)
     QGraphicsView::keyPressEvent(event);
 }
 
-void Grid::open()
-{
-    //TODO
-}
-
-void Grid::saveAs()
-{
-    //TODO
-}
-
 void Grid::setEuclideanMode(bool toggled)
 {
     _useEuclideanDistance = toggled;
@@ -275,7 +267,12 @@ void Grid::deleteEdge(EdgeView* edge)
 
 void Grid::addNodeAt(const QPointF& pos)
 {
-    NodeView* node = new NodeView(++_nextNodeId, pos.x(), pos.y());
+    NodeView* node = NodeViewBuilder()
+                         .id(++_nextNodeId)
+                         .posX(pos.x())
+                         .posY(pos.y())
+                         .build();
+
     _scene->addItem(node);
 }
 
@@ -286,7 +283,11 @@ void Grid::addEdgeBetween(NodeView* from, NodeView* to)
         return;
     }
 
-    EdgeView* edge = new EdgeView(from, to, _useEuclideanDistance);
+    EdgeView* edge = EdgeViewBuilder()
+                         .from(from)
+                         .to(to)
+                         .useEuclideanDistance(_useEuclideanDistance)
+                         .build();
 
     _scene->addItem(edge);
 

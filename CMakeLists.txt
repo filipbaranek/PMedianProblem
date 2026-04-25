@@ -37,7 +37,7 @@ set(HEADERS
     src/View/Workspace/CreateEdgeEvent.h
     src/View/editnodeview.h
     src/View/editedgeview.h
-    src/Helpers/NodeType.h
+    src/Common/nodetype.h
 )
 
 set(VIEWS
@@ -49,6 +49,10 @@ qt_add_executable(PMedianProblem
     ${HEADERS}
     ${VIEWS}
     src/View/editedgeview.cpp
+    src/Common/dtos.h
+    src/Common/idata.h
+    src/Common/Builders/nodeviewbuilder.h
+    src/Common/Builders/edgeviewbuilder.h
 )
 
 target_link_libraries(PMedianProblem PRIVATE

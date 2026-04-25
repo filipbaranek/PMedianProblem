@@ -3,16 +3,21 @@
 
 #include <QGraphicsItem>
 
+class EdgeViewBuilder;
 class NodeView;
 
 class EdgeView : public QGraphicsLineItem
 {
 public:
-    EdgeView(NodeView* from, NodeView* to, bool useEuclideanDistance, QGraphicsItem* parent = nullptr);
+    EdgeView(QGraphicsItem* parent = nullptr);
 
     void updatePosition();
 
     void setFrom(const QString& from);
+
+    void setFrom(NodeView* from);
+
+    void setTo(NodeView* to);
 
     void setUseEuclideanDistance(const bool& useEuclideanDistance);
 
@@ -24,35 +29,19 @@ public:
 
     void setDistance();
 
-    NodeView* from() const
-    {
-        return _from;
-    }
+    NodeView* from() const;
 
-    NodeView* to() const
-    {
-        return _to;
-    }
+    NodeView* to() const;
 
-    const bool& useEuclideanDistance() const
-    {
-        return _useEuclideanDistance;
-    }
+    const bool& useEuclideanDistance() const;
 
-    const bool& isValid() const
-    {
-        return _isValid;
-    }
+    const bool& isValid() const;
 
-    const bool& isOriented() const
-    {
-        return _isOriented;
-    }
+    const bool& isOriented() const;
 
-    const double& distance() const
-    {
-        return _distance;
-    }
+    const double& distance() const;
+
+    friend class EdgeViewBuilder;
 
 protected:
     QRectF boundingRect() const override;

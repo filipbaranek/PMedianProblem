@@ -18,7 +18,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::initConnections()
 {
-    connect(_ui->actionOpen, &QAction::triggered, _ui->graphicsView, &Grid::open);
-    connect(_ui->actionSave_as, &QAction::triggered, _ui->graphicsView, &Grid::saveAs);
+    connect(_ui->actionOpen, &QAction::triggered, this, &MainWindow::openFile);
+    connect(_ui->actionSave_as, &QAction::triggered, this, &MainWindow::saveItemsAs);
     connect(_ui->actionEuclidean_distance, &QAction::toggled, _ui->graphicsView, &Grid::setEuclideanMode);
+}
+
+void MainWindow::openFile()
+{
+    //TODO
+}
+
+void MainWindow::saveItemsAs()
+{
+    //TODO
 }

@@ -17,14 +17,15 @@ namespace
     }
 } // namespace
 
-EdgeView::EdgeView(NodeView* from, NodeView* to, bool useEuclideanDistance, QGraphicsItem* parent)
-    : QGraphicsLineItem(parent), _from(from), _to(to),
-      _useEuclideanDistance(useEuclideanDistance), _isValid(true), _isOriented{}
-{
-    _from->addEdge(this);
-    _to->addEdge(this);
 
-    updatePosition();
+EdgeView::EdgeView(QGraphicsItem* parent)
+    : QGraphicsLineItem(parent),
+      _from{},
+      _to{},
+      _useEuclideanDistance(true),
+      _isValid(true),
+      _isOriented{}
+{
     setZValue(-1);
 }
 
@@ -58,6 +59,18 @@ void EdgeView::setFrom(const QString& from)
     update(boundingRect());
 }
 
+void EdgeView::setFrom(NodeView* from)
+{
+    _from = from;
+    _from->addEdge(this);
+}
+
+void EdgeView::setTo(NodeView* to)
+{
+    _to = to;
+    _to->addEdge(this);
+}
+
 void EdgeView::setUseEuclideanDistance(const bool& useEuclideanDistance)
 {
     _useEuclideanDistance = useEuclideanDistance;
@@ -82,6 +95,36 @@ void EdgeView::setDistance(const double distance)
 void EdgeView::setDistance()
 {
     _distance = euclideanDistance(_from->pos(), _to->pos());
+}
+
+NodeView* EdgeView::from() const
+{
+    return _from;
+}
+
+NodeView* EdgeView::to() const
+{
+    return _to;
+}
+
+const bool& EdgeView::useEuclideanDistance() const
+{
+    return _useEuclideanDistance;
+}
+
+const bool& EdgeView::isValid() const
+{
+    return _isValid;
+}
+
+const bool& EdgeView::isOriented() const
+{
+    return _isOriented;
+}
+
+const double& EdgeView::distance() const
+{
+    return _distance;
 }
 
 QRectF EdgeView::boundingRect() const

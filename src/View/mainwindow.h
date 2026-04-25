@@ -18,6 +18,11 @@ public:
 
     ~MainWindow() override;
 
+private slots:
+    void openFile();
+
+    void saveItemsAs();
+
 private:
     void initConnections();
 

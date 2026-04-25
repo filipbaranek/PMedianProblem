@@ -12,13 +12,13 @@ public:
 
     void reset();
 
-    void setPosFrom(const QPointF& from) { _posFrom = from; }
+    void setPosFrom(const QPointF& from);
 
-    const QPointF& posFrom() const { return _posFrom; }
+    void setPosTo(const QPointF& to);
 
-    void setPosTo(const QPointF& to) { _posTo = to; }
+    const QPointF& posFrom() const;
 
-    const QPointF& posTo() const { return _posTo; }
+    const QPointF& posTo() const;
 
 private:
     QPointF _posFrom;

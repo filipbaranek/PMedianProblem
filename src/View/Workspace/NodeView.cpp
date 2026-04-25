@@ -14,22 +14,66 @@ namespace
     }
 } // namespace
 
-NodeView::NodeView(int id, float x, float y, const QString& name, QGraphicsItem* parent)
+NodeView::NodeView(QGraphicsItem* parent)
     : QGraphicsEllipseItem(-RADIUS, -RADIUS, RADIUS * 2, RADIUS * 2, parent),
-      _id(id), _type(NodeType::CUSTOMER), _posX(x), _posY(y), _variableParameter{}
+      _id{},
+      _type(NodeType::CUSTOMER),
+      _posX{},
+      _posY{},
+      _variableParameter{},
+      _label(new QGraphicsTextItem(_name, this))
 {
-    setPos(x, y);
-
-    _name = !name.isEmpty() ? name : QString::number(id);
-    _label = new QGraphicsTextItem(_name, this);
-    setupLabel(_label, boundingRect());
-
     setBrush(Qt::blue);
     setPen(QPen(Qt::black));
     setFlag(QGraphicsItem::ItemIsMovable);
     setFlag(QGraphicsItem::ItemIsSelectable);
     setFlag(QGraphicsItem::ItemSendsGeometryChanges);
     setZValue(1);
+}
+
+int NodeView::id() const
+{
+    return _id;
+}
+
+const QString& NodeView::name() const
+{
+    return _name;
+}
+
+const NodeType& NodeView::nodeType() const
+{
+    return _type;
+}
+
+const double& NodeView::posX() const
+{
+    return _posX;
+}
+
+const double& NodeView::posY() const
+{
+    return _posY;
+}
+
+const double& NodeView::variableParam() const
+{
+    return _variableParameter;
+}
+
+bool NodeView::isConnectedTo(NodeView* node) const
+{
+    return _connectedNodes.contains(node);
+}
+
+const std::set<EdgeView*>& NodeView::edges() const
+{
+    return _edges;
+}
+
+const std::set<NodeView*>& NodeView::connectedNodes() const
+{
+    return _connectedNodes;
 }
 
 void NodeView::setName(const QString& name)
@@ -50,6 +94,41 @@ void NodeView::setNodeType(const NodeType& type)
     {
         setBrush(Qt::blue);
     }
+}
+
+void NodeView::setPosX(const double x)
+{
+    setPos(x, _posY);
+}
+
+void NodeView::setPosY(const double y)
+{
+    setPos(_posX, y);
+}
+
+void NodeView::setVariableParam(const double variableParam)
+{
+    _variableParameter = variableParam;
+}
+
+void NodeView::connectNode(NodeView *node)
+{
+    _connectedNodes.insert(node);
+}
+
+void NodeView::disconnectNode(NodeView* node)
+{
+    _connectedNodes.erase(node);
+}
+
+void NodeView::addEdge(EdgeView* edge)
+{
+    _edges.insert(edge);
+}
+
+void NodeView::removeEdge(EdgeView* edge)
+{
+    _edges.erase(edge);
 }
 
 QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)

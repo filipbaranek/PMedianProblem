@@ -1,6 +1,6 @@
 #include "editnodeview.h"
 #include "Workspace/NodeView.h"
-#include "../Helpers/NodeType.h"
+#include "../Common/nodetype.h"
 #include <QFormLayout>
 #include <QPushButton>
 #include <QLineEdit>

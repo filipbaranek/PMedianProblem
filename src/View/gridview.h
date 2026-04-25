@@ -27,9 +27,7 @@ protected:
     void keyPressEvent(QKeyEvent* event) override;
 
 public slots:
-    void open();
-
-    void saveAs();
+     // itemsToDTO();
 
     void setEuclideanMode(bool toggled);
 
