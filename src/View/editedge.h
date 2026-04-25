@@ -9,6 +9,7 @@ class QComboBox;
 class QLabel;
 class QPushButton;
 class QFormLayout;
+class QDoubleSpinBox;
 
 class EdgeEditDialog : public QDialog
 {
@@ -27,18 +28,22 @@ private:
 private slots:
     void updateOrientationLogic();
 
+    void updateDistanceLogic();
+
     void updateEdge();
 
 private:
-    EdgeView*    _edge;
-    QFormLayout* _layout;
-    QCheckBox*   _isValid;
-    QCheckBox*   _isOriented;
-    QCheckBox*   _useEuclideanDistance;
-    QPushButton* _okBtn;
-    QPushButton* _cancelBtn;
-    QComboBox*   _nodeFrom;
-    QLabel*      _nodeTo;
+    EdgeView*       _edge;
+    QFormLayout*    _layout;
+    QCheckBox*      _isValid;
+    QCheckBox*      _isOriented;
+    QCheckBox*      _useEuclideanDistance;
+    QPushButton*    _okBtn;
+    QPushButton*    _cancelBtn;
+    QComboBox*      _nodeFrom;
+    QLabel*         _nodeTo;
+    QLabel*         _distanceLabel;
+    QDoubleSpinBox* _distanceInputBox;
 
     //TODO if !useEuclidean then define distance input box
 };

@@ -20,6 +20,10 @@ public:
 
     void setIsOriented(const bool& isOriented);
 
+    void setDistance(const double distance);
+
+    void setDistance();
+
     NodeView* from() const
     {
         return _from;
@@ -45,6 +49,11 @@ public:
         return _isOriented;
     }
 
+    const double& distance() const
+    {
+        return _distance;
+    }
+
 protected:
     QRectF boundingRect() const override;
 
@@ -56,6 +65,7 @@ private:
     bool      _useEuclideanDistance;
     bool      _isValid;
     bool      _isOriented;
+    double    _distance;
 };
 
 #endif // EDGEVIEW_H

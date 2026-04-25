@@ -1,7 +1,21 @@
 #include "EdgeView.h"
 #include "NodeView.h"
+#include <cmath>
 #include <QPainter>
 #include <QPen>
+
+namespace
+{
+    constexpr double square(double x)
+    {
+        return x * x;
+    }
+
+    constexpr double euclideanDistance(const QPointF& from, const QPointF& to)
+    {
+        return std::sqrt(square(from.x() - to.x()) + square(from.y() - to.y()));
+    }
+} // namespace
 
 EdgeView::EdgeView(NodeView* from, NodeView* to, QGraphicsItem* parent)
     : QGraphicsLineItem(parent), _from(from), _to(to),
@@ -22,6 +36,11 @@ void EdgeView::updatePosition()
         QPointF p2 = _to->sceneBoundingRect().center();
 
         setLine(QLineF(p1, p2));
+
+        if (_useEuclideanDistance)
+        {
+            setDistance();
+        }
     }
 }
 
@@ -42,8 +61,6 @@ void EdgeView::setFrom(const QString& from)
 void EdgeView::setUseEuclideanDistance(const bool& useEuclideanDistance)
 {
     _useEuclideanDistance = useEuclideanDistance;
-
-    //TODO
 }
 
 void EdgeView::setIsValid(const bool& isValid)
@@ -55,6 +72,16 @@ void EdgeView::setIsOriented(const bool& isOriented)
 {
     _isOriented = isOriented;
     update(boundingRect());
+}
+
+void EdgeView::setDistance(const double distance)
+{
+    _distance = distance;
+}
+
+void EdgeView::setDistance()
+{
+    _distance = euclideanDistance(_from->pos(), _to->pos());
 }
 
 QRectF EdgeView::boundingRect() const
