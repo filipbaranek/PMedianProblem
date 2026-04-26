@@ -5,16 +5,17 @@
 
 struct NodeData
 {
-    int         _id;
-    QStringView _name;
-    int32_t     _type;
-    double      _posX;
-    double      _posY;
-    double      _variableParameter;
+    int     _id;
+    QString _name;
+    int32_t _type;
+    double  _posX;
+    double  _posY;
+    double  _variableParameter;
 };
 
 struct EdgeData
 {
+    int    _id;
     int    _from;
     int    _to;
     bool   _useEuclideanDistance;

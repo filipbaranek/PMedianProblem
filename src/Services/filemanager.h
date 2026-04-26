@@ -1,15 +1,16 @@
 #ifndef FILEMANAGER_H
 #define FILEMANAGER_H
 
-#include <vector>
+#include <map>
+#include <utility>
 #include "../Common/dtos.h"
 
 class FileManager
 {
 public:
-    void saveToFile(const std::vector<NodeData>& nodes, const std::vector<EdgeData>& edges);
+    void saveToFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges);
 
-    // void loadFromFile();
+    std::pair<std::map<int, NodeData>, std::map<int, EdgeData>> loadFromFile();
 };
 
 #endif // FILEMANAGER_H

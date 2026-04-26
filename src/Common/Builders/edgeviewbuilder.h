@@ -9,6 +9,12 @@ class QGraphicsItem;
 class EdgeViewBuilder
 {
 public:
+    EdgeViewBuilder& id(int id)
+    {
+        _id = id;
+        return *this;
+    }
+
     EdgeViewBuilder& from(NodeView* node)
     {
         _from = node;
@@ -47,9 +53,9 @@ public:
 
     [[nodiscard]] EdgeView* build(QGraphicsItem* parent = {})
     {
-        if (_from == nullptr || _to == nullptr)
+        if (_id == -1 || _from == nullptr || _to == nullptr)
         {
-            throw std::logic_error("Members from and to needs to be defined when creating Edge");
+            throw std::logic_error("Members id, from and to needs to be defined when creating Edge");
         }
 
         auto* edge = new EdgeView(parent);
@@ -75,6 +81,7 @@ public:
     }
 
 private:
+    int       _id{-1};
     NodeView* _from{};
     NodeView* _to{};
     bool      _useEuclideanDistance{true};

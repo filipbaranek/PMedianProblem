@@ -8,8 +8,10 @@
 class EdgeViewBuilder;
 class NodeView;
 
-class EdgeView : public QGraphicsLineItem, public IData<EdgeData>
+class EdgeView : public QObject, public QGraphicsLineItem, public IData<EdgeData>
 {
+    Q_OBJECT
+
 public:
     EdgeView(QGraphicsItem* parent = nullptr);
 
@@ -31,6 +33,8 @@ public:
 
     void setDistance();
 
+    const int& id() const;
+
     NodeView* from() const;
 
     NodeView* to() const;
@@ -47,12 +51,16 @@ public:
 
     friend class EdgeViewBuilder;
 
+signals:
+    void onUpdatePosition(const EdgeData& edge);
+
 protected:
     QRectF boundingRect() const override;
 
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
 private:
+    int       _id;
     NodeView* _from;
     NodeView* _to;
     bool      _useEuclideanDistance;

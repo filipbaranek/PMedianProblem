@@ -19,7 +19,8 @@ namespace
 
 
 EdgeView::EdgeView(QGraphicsItem* parent)
-    : QGraphicsLineItem(parent),
+    : QObject(),
+      QGraphicsLineItem(parent),
       _from{},
       _to{},
       _useEuclideanDistance(true),
@@ -41,6 +42,16 @@ void EdgeView::updatePosition()
         if (_useEuclideanDistance)
         {
             setDistance();
+
+            onUpdatePosition(EdgeData{
+                _id,
+                _from->id(),
+                _to->id(),
+                _useEuclideanDistance,
+                _isValid,
+                _isOriented,
+                _distance
+            });
         }
     }
 }
@@ -95,6 +106,11 @@ void EdgeView::setDistance(const double distance)
 void EdgeView::setDistance()
 {
     _distance = euclideanDistance(_from->pos(), _to->pos());
+}
+
+const int& EdgeView::id() const
+{
+    return _id;
 }
 
 NodeView* EdgeView::from() const

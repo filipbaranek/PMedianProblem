@@ -21,22 +21,17 @@ MainWindow::~MainWindow()
 
 void MainWindow::initConnections()
 {
-    connect(_ui->actionOpen, &QAction::triggered, this, &MainWindow::openFile);
-    connect(_ui->actionSave_as, &QAction::triggered, this, &MainWindow::saveItemsAs);
+    // UI
+    connect(_ui->actionOpen, &QAction::triggered, _viewModel, &GridViewModel::loadItemsFromFile);
+    connect(_ui->actionSave_as, &QAction::triggered, _viewModel, &GridViewModel::saveItemsToFile);
     connect(_ui->actionEuclidean_distance, &QAction::toggled, _ui->graphicsView, &Grid::setEuclideanMode);
-}
 
-void MainWindow::openFile()
-{
-    //TODO
-}
-
-void MainWindow::saveItemsAs()
-{
-    auto items = _ui->graphicsView->itemsToDTO();
-
-    auto& nodes = items.first;
-    auto& edges = items.second;
-
-    _viewModel->saveItemsToFile(nodes, edges);
+    // Events
+    connect(_ui->graphicsView, &Grid::onAddNode, _viewModel, &GridViewModel::setNode);
+    connect(_ui->graphicsView, &Grid::onAddEdge, _viewModel, &GridViewModel::setEdge);
+    connect(_ui->graphicsView, &Grid::onUpdateNode, _viewModel, &GridViewModel::setNode);
+    connect(_ui->graphicsView, &Grid::onUpdateEdge, _viewModel, &GridViewModel::setEdge);
+    connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeNode);
+    connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeEdge);
+    connect(_viewModel, &GridViewModel::onLoadFromFile, _ui->graphicsView, &Grid::insertItemsFromFile);
 }

@@ -15,7 +15,8 @@ namespace
 } // namespace
 
 NodeView::NodeView(QGraphicsItem* parent)
-    : QGraphicsEllipseItem(-RADIUS, -RADIUS, RADIUS * 2, RADIUS * 2, parent),
+    : QObject(),
+      QGraphicsEllipseItem(-RADIUS, -RADIUS, RADIUS * 2, RADIUS * 2, parent),
       _id{},
       _type(NodeType::CUSTOMER),
       _posX{},
@@ -157,6 +158,15 @@ QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)
         {
             edge->updatePosition();
         }
+
+        emit onMove(NodeData{
+            _id,
+            _name,
+            static_cast<int32_t>(_type),
+            _posX,
+            _posY,
+            _variableParameter
+        });
     }
     return QGraphicsItem::itemChange(change, value);
 }

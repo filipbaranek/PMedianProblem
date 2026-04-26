@@ -10,8 +10,10 @@
 class NodeViewBuilder;
 class EdgeView;
 
-class NodeView : public QGraphicsEllipseItem, public IData<NodeData>
+class NodeView : public QObject, public QGraphicsEllipseItem, public IData<NodeData>
 {
+    Q_OBJECT
+
 public:
     NodeView(QGraphicsItem* parent = nullptr);
 
@@ -59,6 +61,9 @@ public:
     }
 
     friend class NodeViewBuilder;
+
+signals:
+    void onMove(const NodeData& node);
 
 protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
