@@ -60,6 +60,7 @@ public:
 
         auto* edge = new EdgeView(parent);
 
+        edge->_id = _id;
         edge->setFrom(_from);
         edge->setTo(_to);
         edge->setUseEuclideanDistance(_useEuclideanDistance);

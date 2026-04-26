@@ -164,7 +164,7 @@ QRectF EdgeView::boundingRect() const
 
     QRectF rect(p1, p2);
 
-    static constexpr qreal extra = 50.0;
+    static constexpr qreal extra = 70.0;
     return rect.normalized().adjusted(-extra, -extra, extra, extra);
 }
 

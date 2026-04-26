@@ -56,6 +56,7 @@ qt_add_executable(PMedianProblem
     src/Services/filemanager.cpp
     src/Services/filemanager.h
     src/ViewModel/gridviewmodel.h src/ViewModel/gridviewmodel.cpp
+    src/Common/idmanager.h
 )
 
 target_link_libraries(PMedianProblem PRIVATE

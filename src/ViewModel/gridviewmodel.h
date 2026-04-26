@@ -27,6 +27,8 @@ public slots:
 
     void removeEdge(int id);
 
+    void clear();
+
 signals:
     void onLoadFromFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges);
 

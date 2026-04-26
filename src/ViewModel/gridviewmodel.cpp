@@ -17,6 +17,12 @@ void GridViewModel::loadItemsFromFile()
     _edges.clear();
 
     auto [nodes, edges] = _fileManager->loadFromFile();
+
+    if (nodes.empty() || edges.empty())
+    {
+        return;
+    }
+
     _nodes = std::move(nodes);
     _edges = std::move(edges);
 
@@ -41,4 +47,10 @@ void GridViewModel::removeNode(int id)
 void GridViewModel::removeEdge(int id)
 {
     _edges.erase(id);
+}
+
+void GridViewModel::clear()
+{
+    _nodes.clear();
+    _edges.clear();
 }

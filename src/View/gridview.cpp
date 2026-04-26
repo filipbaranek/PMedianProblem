@@ -5,6 +5,7 @@
 #include "Workspace/CreateEdgeEvent.h"
 #include "../Common/Builders/edgeviewbuilder.h"
 #include "../Common/Builders/nodeviewbuilder.h"
+#include "../Common/idmanager.h"
 #include "editnodeview.h"
 #include "editedgeview.h"
 #include <functional>
@@ -16,24 +17,6 @@
 
 namespace
 {
-    template<typename T>
-    int nextId(QGraphicsScene* scene)
-    {
-        int id{};
-
-        for (auto& item : scene->items())
-        {
-            auto* derrived = dynamic_cast<T*>(item);
-            if (derrived)
-            {
-                id = derrived->id() + 1;
-                break;
-            }
-        }
-
-        return id;
-    }
-
     template<typename T>
     void removeItems(QGraphicsScene* scene, std::function<void(T*)> removeCallback)
     {
@@ -65,8 +48,11 @@ namespace
 } // namespace
 
 Grid::Grid(QWidget* parent)
-    : QGraphicsView(parent), _edgeEvent(new CreateEdgeEvent()),
-      _scene(new GridScene(this)), _useEuclideanDistance(true)
+    : QGraphicsView(parent),
+      _idManager(IdManager::instance()),
+      _edgeEvent(new CreateEdgeEvent()),
+      _scene(new GridScene(this)),
+      _useEuclideanDistance(true)
 {
     setScene(_scene);
     setRenderHint(QPainter::Antialiasing);
@@ -107,7 +93,8 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
     });
 
     menu.addAction("Clear", [this]() {
-        _scene->clear();
+        clearLayout();
+        emit onClear();
     });
 
     menu.exec(event->globalPos());
@@ -262,9 +249,54 @@ void Grid::keyPressEvent(QKeyEvent* event)
 
 void Grid::insertItemsFromFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges)
 {
-    _scene->clear();
+    clearLayout();
 
+    std::map<int, NodeView*> insertedNodes;
 
+    for (auto& [id, node] : nodes)
+    {
+        _idManager.updateNodeId(std::max(_idManager.currentNodeId(), id));
+
+        auto* nodeItem = NodeViewBuilder()
+            .id(id)
+            .name(node._name)
+            .type(static_cast<NodeType>(node._type))
+            .posX(node._posX)
+            .posY(node._posY)
+            .variableParameter(node._variableParameter)
+            .build();
+
+        insertedNodes[id] = nodeItem;
+
+        _scene->addItem(nodeItem);
+
+        initNodeConnections(nodeItem);
+    }
+
+    for (auto& [id, edge] : edges)
+    {
+        _idManager.updateEdgeId(std::max(_idManager.currentEdgeId(), id));
+
+        NodeView* from = insertedNodes.at(edge._from);
+        NodeView* to   = insertedNodes.at(edge._to);
+
+        auto* edgeItem = EdgeViewBuilder()
+            .id(edge._id)
+            .from(from)
+            .to(to)
+            .isValid(edge._isValid)
+            .isOriented(edge._isOriented)
+            .useEuclideanDistance(edge._useEuclideanDistance)
+            .distance(edge._distance)
+            .build();
+
+        _scene->addItem(edgeItem);
+
+        from->connectNode(to);
+        to->connectNode(from);
+
+        initEdgeConnections(edgeItem);
+    }
 }
 
 void Grid::setEuclideanMode(bool toggled)
@@ -289,6 +321,45 @@ void Grid::setEuclideanMode(bool toggled)
             });
         }
     }
+}
+
+void Grid::clearLayout() {
+    _scene->removeItem(_edgeEvent);
+    _scene->clear();
+
+    _scene->addItem(_edgeEvent);
+    _edgeEvent->setVisible(false);
+
+    _idManager.restart();
+}
+
+void Grid::initNodeConnections(NodeView *node)
+{
+    emit onAddNode(NodeData{
+        node->id(),
+        node->name(),
+        static_cast<int32_t>(node->type()),
+        node->posX(),
+        node->posY(),
+        node->variableParam()
+    });
+
+    connect(node, &NodeView::onMove, this, &Grid::onUpdateNode, Qt::QueuedConnection);
+}
+
+void Grid::initEdgeConnections(EdgeView *edge)
+{
+    emit onAddEdge(EdgeData{
+        edge->id(),
+        edge->from()->id(),
+        edge->to()->id(),
+        edge->useEuclideanDistance(),
+        edge->isValid(),
+        edge->isOriented(),
+        edge->distance()
+    });
+
+    connect(edge, &EdgeView::onUpdatePosition, this, &Grid::onUpdateEdge, Qt::QueuedConnection);
 }
 
 void Grid::deleteNode(NodeView* node)
@@ -327,26 +398,15 @@ void Grid::deleteEdge(EdgeView* edge)
 
 void Grid::addNodeAt(const QPointF& pos)
 {
-    int id = nextId<NodeView>(_scene);
-
     NodeView* node = NodeViewBuilder()
-        .id(id)
+        .id(_idManager.nextNodeId())
         .posX(pos.x())
         .posY(pos.y())
         .build();
 
     _scene->addItem(node);
 
-    emit onAddNode(NodeData{
-        node->id(),
-        node->name(),
-        static_cast<int32_t>(node->type()),
-        node->posX(),
-        node->posY(),
-        node->variableParam()
-    });
-
-    connect(node, &NodeView::onMove, this, &Grid::onUpdateNode);
+    initNodeConnections(node);
 }
 
 void Grid::addEdgeBetween(NodeView* from, NodeView* to)
@@ -356,10 +416,8 @@ void Grid::addEdgeBetween(NodeView* from, NodeView* to)
         return;
     }
 
-    int id = nextId<EdgeView>(_scene);
-
     EdgeView* edge = EdgeViewBuilder()
-        .id(id)
+        .id(_idManager.nextEdgeId())
         .from(from)
         .to(to)
         .useEuclideanDistance(_useEuclideanDistance)
@@ -370,16 +428,6 @@ void Grid::addEdgeBetween(NodeView* from, NodeView* to)
     from->connectNode(to);
     to->connectNode(from);
 
-    emit onAddEdge(EdgeData{
-        edge->id(),
-        edge->from()->id(),
-        edge->to()->id(),
-        edge->useEuclideanDistance(),
-        edge->isValid(),
-        edge->isOriented(),
-        edge->distance()
-    });
-
-    connect(edge, &EdgeView::onUpdatePosition, this, &Grid::onUpdateEdge);
+    initEdgeConnections(edge);
 }
 

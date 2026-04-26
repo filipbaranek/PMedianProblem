@@ -27,6 +27,7 @@ void MainWindow::initConnections()
     connect(_ui->actionEuclidean_distance, &QAction::toggled, _ui->graphicsView, &Grid::setEuclideanMode);
 
     // Events
+    connect(_ui->graphicsView, &Grid::onClear, _viewModel, &GridViewModel::clear);
     connect(_ui->graphicsView, &Grid::onAddNode, _viewModel, &GridViewModel::setNode);
     connect(_ui->graphicsView, &Grid::onAddEdge, _viewModel, &GridViewModel::setEdge);
     connect(_ui->graphicsView, &Grid::onUpdateNode, _viewModel, &GridViewModel::setNode);

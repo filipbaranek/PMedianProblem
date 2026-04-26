@@ -4,6 +4,7 @@
 #include <QGraphicsView>
 #include "../Common/dtos.h"
 
+class IdManager;
 class NodeView;
 class EdgeView;
 class CreateEdgeEvent;
@@ -45,8 +46,16 @@ signals:
 
     void onDeleteEdge(int id);
 
+    void onClear();
+
 private:
+    void clearLayout();
+
     void initConnections();
+
+    void initNodeConnections(NodeView* node);
+
+    void initEdgeConnections(EdgeView* edge);
 
     void addNodeAt(const QPointF& pos);
 
@@ -57,6 +66,7 @@ private:
     void deleteEdge(EdgeView* edge);
 
 private:
+    IdManager&       _idManager;
     QPoint           _lastMousePos;
     CreateEdgeEvent* _edgeEvent;
     QGraphicsScene*  _scene;
