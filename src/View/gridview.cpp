@@ -48,7 +48,7 @@ namespace
 
 Grid::Grid(QWidget* parent)
     : QGraphicsView(parent), _edgeEvent(new CreateEdgeEvent()),
-      _scene(new GridScene(this)), _nextNodeId{}, _useEuclideanDistance(true)
+      _scene(new GridScene(this)), _useEuclideanDistance(true)
 {
     setScene(_scene);
     setRenderHint(QPainter::Antialiasing);
@@ -90,7 +90,6 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
 
     menu.addAction("Clear", [this]() {
         _scene->clear();
-        _nextNodeId = 0;
     });
 
     menu.exec(event->globalPos());
@@ -248,6 +247,11 @@ std::pair<std::vector<NodeData>, std::vector<EdgeData>> Grid::itemsToDTO()
     return { nodes, edges };
 }
 
+void Grid::itemsFromDTO(const std::vector<NodeData>& nodes, const std::vector<EdgeData>& edges)
+{
+    //TODO
+}
+
 void Grid::setEuclideanMode(bool toggled)
 {
     _useEuclideanDistance = toggled;
@@ -291,8 +295,21 @@ void Grid::deleteEdge(EdgeView* edge)
 
 void Grid::addNodeAt(const QPointF& pos)
 {
+    int       id{};
+    NodeView* lastNode{};
+
+    for (auto& item : _scene->items())
+    {
+        auto* node = dynamic_cast<NodeView*>(item);
+        if (node)
+        {
+            id = node->id() + 1;
+            break;
+        }
+    }
+
     NodeView* node = NodeViewBuilder()
-                         .id(++_nextNodeId)
+                         .id(id)
                          .posX(pos.x())
                          .posY(pos.y())
                          .build();

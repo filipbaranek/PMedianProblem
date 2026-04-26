@@ -31,6 +31,8 @@ protected:
 public slots:
     std::pair<std::vector<NodeData>, std::vector<EdgeData>> itemsToDTO();
 
+    void itemsFromDTO(const std::vector<NodeData>& nodes, const std::vector<EdgeData>& edges);
+
     void setEuclideanMode(bool toggled);
 
 private:
@@ -46,7 +48,6 @@ private:
     QPoint           _lastMousePos;
     CreateEdgeEvent* _edgeEvent;
     QGraphicsScene*  _scene;
-    int              _nextNodeId;
     bool             _useEuclideanDistance;
 };
 
