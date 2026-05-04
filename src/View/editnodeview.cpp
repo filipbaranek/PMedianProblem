@@ -9,7 +9,8 @@
 #include <QLabel>
 
 NodeEditDialog::NodeEditDialog(NodeView* node, QWidget* parent)
-    : QDialog(parent), _node(node)
+    : QDialog(parent)
+    , _node(node)
 {
     setWindowTitle("Edit node");
 

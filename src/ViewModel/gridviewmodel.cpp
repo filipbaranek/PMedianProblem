@@ -1,5 +1,10 @@
 #include "gridviewmodel.h"
 #include "../Services/filemanager.h"
+#include "../Services/graphconnectioncheck.h"
+#include "../Model/Node.h"
+#include "../Model/Edge.h"
+#include "../Common/Builders/nodebuilder.h"
+#include "../Common/Builders/edgebuilder.h"
 
 GridViewModel::GridViewModel(std::shared_ptr<FileManager> fileManager, QObject* parent)
     : QObject(parent),
@@ -53,4 +58,54 @@ void GridViewModel::clear()
 {
     _nodes.clear();
     _edges.clear();
+}
+
+void GridViewModel::checkGraphConnection()
+{
+    if (_nodes.empty())
+    {
+        emit onCheckGraphConnection("There is no graph yet to check");
+        return;
+    }
+
+    std::map<int, Node> nodeModels;
+    std::map<int, Edge> edgeModels;
+
+    for (auto& [id, node] : _nodes)
+    {
+        nodeModels.emplace(id, NodeBuilder()
+            .id(id)
+            .type(static_cast<NodeType>(node._type))
+            .variableParameter(node._variableParameter)
+            .build());
+    }
+
+    for (auto& [id, edge] : _edges)
+    {
+        Node* from = &nodeModels.at(edge._from);
+        Node* to   = &nodeModels.at(edge._to);
+
+        auto [it, inserted] = edgeModels.emplace(id, EdgeBuilder()
+            .id(id)
+            .from(from)
+            .to(to)
+            .distance(edge._distance)
+            .isOriented(edge._isOriented)
+            .isValid(edge._isValid)
+            .build());
+
+        Edge* newEdge = &it->second;
+
+        from->addEdge(newEdge);
+        to->addEdge(newEdge);
+
+        from->connectNode(to);
+        to->connectNode(from);
+    }
+
+    bool isGraphConnected = GraphConnectionCheck::checkGraphConnection(nodeModels);
+
+    QString message = isGraphConnected ? "Graph is fully connected" : "There is more than 1 graph";
+
+    emit onCheckGraphConnection(message);
 }

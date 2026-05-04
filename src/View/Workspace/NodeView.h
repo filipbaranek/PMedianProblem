@@ -23,11 +23,11 @@ public:
 
     const NodeType& nodeType() const;
 
-    const double& posX() const;
+    const double posX() const;
 
-    const double& posY() const;
+    const double posY() const;
 
-    const double& variableParam() const;
+    const double variableParam() const;
 
     bool isConnectedTo(NodeView* node) const;
 

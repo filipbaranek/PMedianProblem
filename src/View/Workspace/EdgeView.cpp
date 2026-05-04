@@ -108,7 +108,7 @@ void EdgeView::setDistance()
     _distance = euclideanDistance(_from->pos(), _to->pos());
 }
 
-const int& EdgeView::id() const
+const int EdgeView::id() const
 {
     return _id;
 }
@@ -123,22 +123,22 @@ NodeView* EdgeView::to() const
     return _to;
 }
 
-const bool& EdgeView::useEuclideanDistance() const
+const bool EdgeView::useEuclideanDistance() const
 {
     return _useEuclideanDistance;
 }
 
-const bool& EdgeView::isValid() const
+const bool EdgeView::isValid() const
 {
     return _isValid;
 }
 
-const bool& EdgeView::isOriented() const
+const bool EdgeView::isOriented() const
 {
     return _isOriented;
 }
 
-const double& EdgeView::distance() const
+const double EdgeView::distance() const
 {
     return _distance;
 }
@@ -155,17 +155,6 @@ EdgeData EdgeView::toDTO()
     data._distance             = _distance;
 
     return data;
-}
-
-QRectF EdgeView::boundingRect() const
-{
-    QPointF p1 = _from->sceneBoundingRect().center();
-    QPointF p2 = _to->sceneBoundingRect().center();
-
-    QRectF rect(p1, p2);
-
-    static constexpr qreal extra = 70.0;
-    return rect.normalized().adjusted(-extra, -extra, extra, extra);
 }
 
 void EdgeView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget)

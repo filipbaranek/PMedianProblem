@@ -102,6 +102,7 @@
     <bool>false</bool>
    </attribute>
    <addaction name="actionRun"/>
+   <addaction name="actionCheck"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -114,9 +115,6 @@
    </property>
   </action>
   <action name="actionRun">
-   <property name="checkable">
-    <bool>true</bool>
-   </property>
    <property name="icon">
     <iconset theme="QIcon::ThemeIcon::MediaPlaybackStart"/>
    </property>
@@ -133,6 +131,17 @@
    </property>
    <property name="text">
     <string>Euclidean distance</string>
+   </property>
+  </action>
+  <action name="actionCheck">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::EditFind"/>
+   </property>
+   <property name="text">
+    <string>Check</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
    </property>
   </action>
  </widget>

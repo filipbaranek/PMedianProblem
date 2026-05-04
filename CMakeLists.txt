@@ -57,6 +57,13 @@ qt_add_executable(PMedianProblem
     src/Services/filemanager.h
     src/ViewModel/gridviewmodel.h src/ViewModel/gridviewmodel.cpp
     src/Common/idmanager.h
+    src/Services/graphconnectioncheck.h
+    src/Model/Node.h
+    src/Common/Builders/nodebuilder.h
+    src/Model/Edge.h
+    src/Common/Builders/edgebuilder.h
+    src/Services/graphconnectioncheck.cpp
+    src/View/graphcheck.h src/View/graphcheck.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE

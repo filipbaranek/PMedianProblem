@@ -33,19 +33,19 @@ public:
 
     void setDistance();
 
-    const int& id() const;
+    const int id() const;
 
     NodeView* from() const;
 
     NodeView* to() const;
 
-    const bool& useEuclideanDistance() const;
+    const bool useEuclideanDistance() const;
 
-    const bool& isValid() const;
+    const bool isValid() const;
 
-    const bool& isOriented() const;
+    const bool isOriented() const;
 
-    const double& distance() const;
+    const double distance() const;
 
     EdgeData toDTO() override;
 
@@ -55,8 +55,6 @@ signals:
     void onUpdatePosition(const EdgeData& edge);
 
 protected:
-    QRectF boundingRect() const override;
-
     void paint(QPainter* painter, const QStyleOptionGraphicsItem* option, QWidget* widget) override;
 
 private:

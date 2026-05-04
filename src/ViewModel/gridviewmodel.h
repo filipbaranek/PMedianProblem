@@ -14,11 +14,11 @@ class GridViewModel : public QObject
 public:
     GridViewModel(std::shared_ptr<FileManager> fileManager, QObject* parent = nullptr);
 
+public slots:
     void saveItemsToFile();
 
     void loadItemsFromFile();
 
-public slots:
     void setNode(const NodeData& node);
 
     void setEdge(const EdgeData& edge);
@@ -29,7 +29,11 @@ public slots:
 
     void clear();
 
+    void checkGraphConnection();
+
 signals:
+    void onCheckGraphConnection(const QString& message);
+
     void onLoadFromFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges);
 
 private:

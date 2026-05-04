@@ -59,6 +59,7 @@ Grid::Grid(QWidget* parent)
     setDragMode(QGraphicsView::RubberBandDrag);
     horizontalScrollBar()->hide();
     verticalScrollBar()->hide();
+    setViewportUpdateMode(QGraphicsView::FullViewportUpdate);
 
     _scene->setSceneRect(-5000, -5000, 10000, 10000);
     _scene->addItem(_edgeEvent);

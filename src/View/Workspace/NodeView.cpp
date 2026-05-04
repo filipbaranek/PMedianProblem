@@ -47,17 +47,17 @@ const NodeType& NodeView::nodeType() const
     return _type;
 }
 
-const double& NodeView::posX() const
+const double NodeView::posX() const
 {
     return _posX;
 }
 
-const double& NodeView::posY() const
+const double NodeView::posY() const
 {
     return _posY;
 }
 
-const double& NodeView::variableParam() const
+const double NodeView::variableParam() const
 {
     return _variableParameter;
 }
