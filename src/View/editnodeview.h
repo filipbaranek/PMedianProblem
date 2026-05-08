@@ -4,6 +4,7 @@
 #include <QDialog>
 
 class NodeView;
+class QFormLayout;
 class QLineEdit;
 class QComboBox;
 class QPushButton;
@@ -25,18 +26,19 @@ private:
     void initConnections();
 
 private slots:
-    void updateVariableParams();
+    void updateFixedCostsParam();
 
     void updateNode();
 
 private:
     NodeView*       _node;
+    QFormLayout*    _layout;
     QLineEdit*      _name;
     QComboBox*      _type;
     QDoubleSpinBox* _posX;
     QDoubleSpinBox* _posY;
-    QDoubleSpinBox* _variableParam;
-    QLabel*         _variableParamLabel;
+    QDoubleSpinBox* _fixedCosts;
+    QLabel*         _fixedCostsLabel;
     QPushButton*    _okBtn;
     QPushButton*    _cancelBtn;
 };

@@ -21,7 +21,7 @@ NodeView::NodeView(QGraphicsItem* parent)
       _type(NodeType::CUSTOMER),
       _posX{},
       _posY{},
-      _variableParameter{},
+      _fixedCosts{},
       _label(new QGraphicsTextItem(_name, this))
 {
     setBrush(Qt::blue);
@@ -57,9 +57,9 @@ const double NodeView::posY() const
     return _posY;
 }
 
-const double NodeView::variableParam() const
+const double NodeView::fixedCosts() const
 {
-    return _variableParameter;
+    return _fixedCosts;
 }
 
 bool NodeView::isConnectedTo(NodeView* node) const
@@ -89,7 +89,7 @@ void NodeView::setNodeType(const NodeType& type)
     _type = type;
     if (type == NodeType::STORAGE)
     {
-        setBrush(Qt::red);
+        setBrush(Qt::darkGreen);
     }
     else
     {
@@ -107,9 +107,9 @@ void NodeView::setPosY(const double y)
     setPos(_posX, y);
 }
 
-void NodeView::setVariableParam(const double variableParam)
+void NodeView::setFixedCosts(const double fixedCosts)
 {
-    _variableParameter = variableParam;
+    _fixedCosts = fixedCosts;
 }
 
 void NodeView::connectNode(NodeView *node)
@@ -136,12 +136,12 @@ NodeData NodeView::toDTO()
 {
     NodeData data{};
 
-    data._id                = _id;
-    data._name              = _name;
-    data._posX              = _posX;
-    data._posY              = _posY;
-    data._type              = static_cast<int32_t>(_type);
-    data._variableParameter = _variableParameter;
+    data._id         = _id;
+    data._name       = _name;
+    data._posX       = _posX;
+    data._posY       = _posY;
+    data._type       = static_cast<int32_t>(_type);
+    data._fixedCosts = _fixedCosts;
 
     return data;
 }
@@ -165,7 +165,7 @@ QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)
             static_cast<int32_t>(_type),
             _posX,
             _posY,
-            _variableParameter
+            _fixedCosts
         });
     }
     return QGraphicsItem::itemChange(change, value);

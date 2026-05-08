@@ -76,7 +76,7 @@ void GridViewModel::checkGraphConnection()
         nodeModels.emplace(id, NodeBuilder()
             .id(id)
             .type(static_cast<NodeType>(node._type))
-            .variableParameter(node._variableParameter)
+            .fixedCosts(node._fixedCosts)
             .build());
     }
 
@@ -96,11 +96,8 @@ void GridViewModel::checkGraphConnection()
 
         Edge* newEdge = &it->second;
 
-        from->addEdge(newEdge);
-        to->addEdge(newEdge);
-
-        from->connectNode(to);
-        to->connectNode(from);
+        from->connectNode(newEdge, to);
+        to->connectNode(newEdge, from);
     }
 
     bool isGraphConnected = GraphConnectionCheck::checkGraphConnection(nodeModels);

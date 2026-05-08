@@ -9,6 +9,8 @@ MainWindow::MainWindow(GridViewModel* viewModel, QWidget* parent)
       _ui(new Ui::MainWindow),
       _viewModel(viewModel)
 {
+    setWindowTitle("P-Median problem");
+
     _ui->setupUi(this);
     _ui->actionEuclidean_distance->setChecked(true);
 

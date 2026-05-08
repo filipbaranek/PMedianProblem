@@ -25,9 +25,9 @@ public:
         return *this;
     }
 
-    NodeBuilder& variableParameter(double variableParameter)
+    NodeBuilder& fixedCosts(double fixedCosts)
     {
-        _node._variableParameter = variableParameter;
+        _node._fixedCosts = fixedCosts;
         return *this;
     }
 

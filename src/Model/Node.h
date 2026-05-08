@@ -1,7 +1,7 @@
 #ifndef NODE_H
 #define NODE_H
 
-#include <set>
+#include <map>
 #include "../Common/nodetype.h"
 
 class Edge;
@@ -28,17 +28,12 @@ public:
         return _type;
     }
 
-    const double variableParameter() const
+    const double fixedCosts() const
     {
-        return _variableParameter;
+        return _fixedCosts;
     }
 
-    const std::set<Edge*>& edges() const
-    {
-        return _edges;
-    }
-
-    const std::set<Node*> connectedNodes() const
+    const std::map<Edge*, Node*> connectedNodes() const
     {
         return _connectedNodes;
     }
@@ -48,25 +43,19 @@ public:
         _isMarked = isMarked;
     }
 
-    void addEdge(Edge* edge)
+    void connectNode(Edge* edge, Node* node)
     {
-        _edges.insert(edge);
-    }
-
-    void connectNode(Node* node)
-    {
-        _connectedNodes.insert(node);
+        _connectedNodes[edge] = node;
     }
 
     friend class NodeBuilder;
 
 private:
-    int             _id;
-    bool            _isMarked;
-    NodeType        _type;
-    double          _variableParameter;
-    std::set<Edge*> _edges;
-    std::set<Node*> _connectedNodes;
+    int                    _id;
+    bool                   _isMarked;
+    NodeType               _type;
+    double                 _fixedCosts;
+    std::map<Edge*, Node*> _connectedNodes;
 };
 
 #endif // NODE_H

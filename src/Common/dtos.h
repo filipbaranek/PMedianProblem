@@ -10,7 +10,7 @@ struct NodeData
     int32_t _type;
     double  _posX;
     double  _posY;
-    double  _variableParameter;
+    double  _fixedCosts;
 };
 
 struct EdgeData

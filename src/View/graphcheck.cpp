@@ -10,6 +10,9 @@ GraphCheck::GraphCheck(const QString& message, QWidget* parent)
     initUI(message);
     initConnections();
     setMinimumWidth(300);
+    setMaximumWidth(300);
+    setMinimumHeight(100);
+    setMaximumHeight(100);
 }
 
 void GraphCheck::initUI(const QString& message)

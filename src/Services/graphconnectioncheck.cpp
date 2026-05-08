@@ -17,9 +17,9 @@ bool GraphConnectionCheck::checkGraphConnection(std::map<int, Node>& nodes)
         auto* currentNode    = visitedNodes.back();
         auto& connectedNodes = currentNode->connectedNodes();
 
-        for (auto* connectedNode : connectedNodes)
+        for (auto& [edge, connectedNode] : connectedNodes)
         {
-            if (!connectedNode->isMarked())
+            if (edge->isValid() && !connectedNode->isMarked())
             {
                 connectedNode->setIsMarked(true);
                 visitedNodes.push_back(connectedNode);

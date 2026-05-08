@@ -32,7 +32,7 @@ void FileManager::saveToFile(const std::map<int, NodeData>& nodes, const std::ma
     }
 
     QTextStream outNode(&nodesFile);
-    outNode << "# id name type posX posY variableParameter\n";
+    outNode << "# id name type posX posY fixedCosts\n";
 
     for (const auto& [id, node] : nodes)
     {
@@ -41,7 +41,7 @@ void FileManager::saveToFile(const std::map<int, NodeData>& nodes, const std::ma
                 << node._type << ";"
                 << node._posX << ";"
                 << node._posY << ";"
-                << node._variableParameter << "\n";
+                << node._fixedCosts << "\n";
     }
 
     nodesFile.close();
@@ -114,12 +114,12 @@ std::pair<std::map<int, NodeData>, std::map<int, EdgeData>> FileManager::loadFro
 
             NodeData node;
 
-            node._id = parts[0].toInt();
-            node._name = parts[1];
-            node._type = parts[2].toInt();
-            node._posX = parts[3].toDouble();
-            node._posY = parts[4].toDouble();
-            node._variableParameter = parts[5].toDouble();
+            node._id         = parts[0].toInt();
+            node._name       = parts[1];
+            node._type       = parts[2].toInt();
+            node._posX       = parts[3].toDouble();
+            node._posY       = parts[4].toDouble();
+            node._fixedCosts = parts[5].toDouble();
 
             nodes[node._id] = node;
         }

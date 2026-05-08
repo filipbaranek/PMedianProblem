@@ -27,7 +27,7 @@ public:
 
     const double posY() const;
 
-    const double variableParam() const;
+    const double fixedCosts() const;
 
     bool isConnectedTo(NodeView* node) const;
 
@@ -43,7 +43,7 @@ public:
 
     void setPosY(const double y);
 
-    void setVariableParam(const double variableParam);
+    void setFixedCosts(const double fixedCosts);
 
     void connectNode(NodeView* node);
 
@@ -74,7 +74,7 @@ private:
     NodeType            _type;
     double              _posX;
     double              _posY;
-    double              _variableParameter;
+    double              _fixedCosts;
     QGraphicsTextItem*  _label;
     std::set<EdgeView*> _edges;
     std::set<NodeView*> _connectedNodes;

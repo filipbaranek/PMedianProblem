@@ -38,9 +38,9 @@ public:
         return *this;
     }
 
-    NodeViewBuilder& variableParameter(double variableParam)
+    NodeViewBuilder& fixedCosts(double fixedCosts)
     {
-        _variableParameter = variableParam;
+        _fixedCosts = fixedCosts;
         return *this;
     }
 
@@ -63,7 +63,7 @@ public:
         node->setNodeType(_type);
         node->setPosX(_posX);
         node->setPosY(_posY);
-        node->setVariableParam(_variableParameter);
+        node->setFixedCosts(_fixedCosts);
 
         return node;
     }
@@ -74,7 +74,7 @@ private:
     QString             _name{};
     double              _posX{};
     double              _posY{};
-    double              _variableParameter{};
+    double              _fixedCosts{};
 };
 
 #endif // NODEVIEWBUILDER_H

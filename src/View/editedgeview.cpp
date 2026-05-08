@@ -44,13 +44,13 @@ void EdgeEditDialog::initUI()
     mainLayout->addLayout(_layout);
     mainLayout->addStretch(1);
 
-    auto* button_layout = new QHBoxLayout();
-    _okBtn              = new QPushButton("OK");
-    _cancelBtn          = new QPushButton("Cancel");
-    button_layout->addWidget(_okBtn);
-    button_layout->addWidget(_cancelBtn);
+    auto* buttonLayout = new QHBoxLayout();
+    _okBtn             = new QPushButton("OK");
+    _cancelBtn         = new QPushButton("Cancel");
+    buttonLayout->addWidget(_okBtn);
+    buttonLayout->addWidget(_cancelBtn);
 
-    mainLayout->addLayout(button_layout);
+    mainLayout->addLayout(buttonLayout);
 
     this->setMinimumHeight(200);
 }

@@ -135,7 +135,7 @@ void Grid::mousePressEvent(QMouseEvent* event)
                     static_cast<int32_t>(foundNode->type()),
                     foundNode->posX(),
                     foundNode->posY(),
-                    foundNode->variableParam()
+                    foundNode->fixedCosts()
                 });
             });
 
@@ -264,7 +264,7 @@ void Grid::insertItemsFromFile(const std::map<int, NodeData>& nodes, const std::
             .type(static_cast<NodeType>(node._type))
             .posX(node._posX)
             .posY(node._posY)
-            .variableParameter(node._variableParameter)
+            .fixedCosts(node._fixedCosts)
             .build();
 
         insertedNodes[id] = nodeItem;
@@ -342,7 +342,7 @@ void Grid::initNodeConnections(NodeView *node)
         static_cast<int32_t>(node->type()),
         node->posX(),
         node->posY(),
-        node->variableParam()
+        node->fixedCosts()
     });
 
     connect(node, &NodeView::onMove, this, &Grid::onUpdateNode, Qt::QueuedConnection);
