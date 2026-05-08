@@ -1,0 +1,15 @@
+#ifndef DIJKSTRA_H
+#define DIJKSTRA_H
+
+#include <map>
+
+class Node;
+
+class Dijkstra {
+public:
+    Dijkstra() = delete;
+
+    static std::map<int, double> computeShortestPaths(Node* startNode, const std::map<int, Node*>& allNodes);
+};
+
+#endif // DIJKSTRA_H

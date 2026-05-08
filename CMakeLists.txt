@@ -64,6 +64,10 @@ qt_add_executable(PMedianProblem
     src/Common/Builders/edgebuilder.h
     src/Services/graphconnectioncheck.cpp
     src/View/graphcheck.h src/View/graphcheck.cpp
+    src/Services/dijkstra.h
+    src/Services/dijkstra.cpp
+    src/Services/distancematrix.h
+    src/Services/distancematrix.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE

@@ -11,12 +11,6 @@ class GraphConnectionCheck
 public:
     GraphConnectionCheck() = delete;
 
-    GraphConnectionCheck(const GraphConnectionCheck&) = delete;
-
-    ~GraphConnectionCheck() = delete;
-
-    GraphConnectionCheck& operator=(const GraphConnectionCheck&) = delete;
-
     static bool checkGraphConnection(std::map<int, Node>& nodes);
 };
 
