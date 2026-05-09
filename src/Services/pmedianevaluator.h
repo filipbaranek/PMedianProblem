@@ -4,22 +4,20 @@
 #include <vector>
 #include <set>
 #include <map>
-#include <limits>
 #include <random>
 #include "ievaluator.h"
 #include "../Model/distancematrix.h"
 
 struct PMedianConfig
 {
-    const int    p;
-    const double transportCosts;
+    int    p;
+    double transportCosts;
 };
 
 struct PMedianSolution : ISolution
 {
     std::map<Node*, Node*> assignments;
     std::set<Node*>        selectedStorages;
-    double                 totalCost = std::numeric_limits<double>::infinity();
 };
 
 class PMedianEvaluator : public IEvaluator
@@ -32,9 +30,6 @@ public:
     std::shared_ptr<ISolution> getNeighbor(ISolution& currentSolution) const override;
 
     void evaluate(ISolution& solution) const override;
-
-private:
-    //
 
 private:
     mutable std::mt19937        _rng;

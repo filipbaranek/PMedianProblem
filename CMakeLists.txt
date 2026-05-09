@@ -65,6 +65,7 @@ set(HEADERS
     src/Services/pmedianevaluator.h
     src/Services/simulatedannealing.h
     src/Services/ievaluator.h
+    src/Services/pmediansolver.h
 )
 
 set(VIEWS
@@ -75,6 +76,7 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
+    src/Services/pmediansolver.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE

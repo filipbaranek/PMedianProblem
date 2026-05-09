@@ -1,6 +1,4 @@
 #include "simulatedannealing.h"
-#include "pmedianevaluator.h"
-#include "../Model/node.h"
 #include <cmath>
 
 SimulatedAnnealing::SimulatedAnnealing(const SimulatedAnnealingConfig& config)
@@ -15,19 +13,15 @@ SimulatedAnnealing::SimulatedAnnealing(const SimulatedAnnealingConfig& config)
 
 std::shared_ptr<ISolution> SimulatedAnnealing::optimize(const IEvaluator& evaluator)
 {
-    const auto& pmedianEvaluator = dynamic_cast<const PMedianEvaluator&>(evaluator);
-
-    std::shared_ptr<PMedianSolution> currentSol =
-        dynamic_pointer_cast<PMedianSolution>(pmedianEvaluator.initialSolution());
-    std::shared_ptr<PMedianSolution> bestSol = currentSol;
+    std::shared_ptr<ISolution> currentSol = evaluator.initialSolution();
+    std::shared_ptr<ISolution> bestSol    = currentSol;
 
     double temperature = _startTemp;
     while (temperature > _minTemp)
     {
         for (int i = 0; i < _iterPerTemp; ++i)
         {
-            std::shared_ptr<PMedianSolution> neighborSol =
-                dynamic_pointer_cast<PMedianSolution>(evaluator.getNeighbor(*currentSol));
+            std::shared_ptr<ISolution> neighborSol = evaluator.getNeighbor(*currentSol);
 
             if (accept(currentSol->totalCost, neighborSol->totalCost, temperature))
             {

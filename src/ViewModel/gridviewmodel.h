@@ -4,6 +4,8 @@
 #include <map>
 #include <QObject>
 #include "../Common/dtos.h"
+#include "../Services/pmedianevaluator.h"
+#include "../Services/simulatedannealing.h"
 
 class FileManager;
 
@@ -19,6 +21,10 @@ public slots:
 
     void loadItemsFromFile();
 
+    void checkGraphConnection();
+
+    void solvePMedianProblem();
+
     void setNode(const NodeData& node);
 
     void setEdge(const EdgeData& edge);
@@ -27,9 +33,11 @@ public slots:
 
     void removeEdge(int id);
 
-    void clear();
+    void updateConfig(const PMedianConfig& config);
 
-    void checkGraphConnection();
+    void updateConfig(const SimulatedAnnealingConfig& config);
+
+    void clear();
 
 signals:
     void onCheckGraphConnection(const QString& message);
@@ -39,6 +47,9 @@ signals:
 private:
     std::map<int, NodeData> _nodes;
     std::map<int, EdgeData> _edges;
+
+    PMedianConfig            _pMedianConfig;
+    SimulatedAnnealingConfig _simAnnealConfig;
 
     std::shared_ptr<FileManager> _fileManager;
 };

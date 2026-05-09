@@ -1,14 +1,17 @@
 #include "gridviewmodel.h"
 #include "../Services/filemanager.h"
 #include "../Services/graphconnectioncheck.h"
+#include "../Services/pmediansolver.h"
 #include "../Model/node.h"
 #include "../Model/edge.h"
 #include "../Common/Builders/nodebuilder.h"
 #include "../Common/Builders/edgebuilder.h"
 
 GridViewModel::GridViewModel(std::shared_ptr<FileManager> fileManager, QObject* parent)
-    : QObject(parent),
-      _fileManager(std::move(fileManager))
+    : QObject(parent)
+    , _pMedianConfig{}
+    , _simAnnealConfig{}
+    , _fileManager(std::move(fileManager))
 { }
 
 void GridViewModel::saveItemsToFile()
@@ -52,6 +55,16 @@ void GridViewModel::removeNode(int id)
 void GridViewModel::removeEdge(int id)
 {
     _edges.erase(id);
+}
+
+void GridViewModel::updateConfig(const PMedianConfig& config)
+{
+    _pMedianConfig = config;
+}
+
+void GridViewModel::updateConfig(const SimulatedAnnealingConfig& config)
+{
+    _simAnnealConfig = config;
 }
 
 void GridViewModel::clear()
@@ -105,4 +118,14 @@ void GridViewModel::checkGraphConnection()
     QString message = isGraphConnected ? "Graph is fully connected" : "There is more than 1 graph";
 
     emit onCheckGraphConnection(message);
+}
+
+void GridViewModel::solvePMedianProblem()
+{
+    // TODO - common parser logic from DTO to Model
+
+    // PMedianSolution solution = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, );
+
+    // TODO - signal result window
+    // TODO - update GUI colors
 }

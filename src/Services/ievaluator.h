@@ -6,6 +6,8 @@
 struct ISolution
 {
     virtual ~ISolution() = default;
+
+    double totalCost = std::numeric_limits<double>::infinity();
 };
 
 class IEvaluator
