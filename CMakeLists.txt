@@ -26,6 +26,15 @@ set(SOURCES
     src/View/Workspace/EdgeView.cpp
     src/View/Workspace/CreateEdgeEvent.cpp
     src/View/editnodeview.cpp
+    src/View/editedgeview.cpp
+    src/Services/filemanager.cpp
+    src/ViewModel/gridviewmodel.cpp
+    src/Services/graphconnectioncheck.cpp
+    src/View/graphcheck.cpp
+    src/Services/dijkstra.cpp
+    src/Services/distancematrix.cpp
+    src/Services/pmedianevaluator.cpp
+    src/Services/simulatedannealing.cpp
 )
 
 set(HEADERS
@@ -38,6 +47,24 @@ set(HEADERS
     src/View/editnodeview.h
     src/View/editedgeview.h
     src/Common/nodetype.h
+    src/Common/dtos.h
+    src/Common/idata.h
+    src/Common/Builders/nodeviewbuilder.h
+    src/Common/Builders/edgeviewbuilder.h
+    src/Services/filemanager.h
+    src/ViewModel/gridviewmodel.h
+    src/Common/idmanager.h
+    src/Services/graphconnectioncheck.h
+    src/Model/Node.h
+    src/Common/Builders/nodebuilder.h
+    src/Model/Edge.h
+    src/Common/Builders/edgebuilder.h
+    src/View/graphcheck.h
+    src/Services/dijkstra.h
+    src/Services/distancematrix.h
+    src/Services/pmedianevaluator.h
+    src/Services/simulatedannealing.h
+    src/Services/ievaluator.h
 )
 
 set(VIEWS
@@ -48,26 +75,6 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
-    src/View/editedgeview.cpp
-    src/Common/dtos.h
-    src/Common/idata.h
-    src/Common/Builders/nodeviewbuilder.h
-    src/Common/Builders/edgeviewbuilder.h
-    src/Services/filemanager.cpp
-    src/Services/filemanager.h
-    src/ViewModel/gridviewmodel.h src/ViewModel/gridviewmodel.cpp
-    src/Common/idmanager.h
-    src/Services/graphconnectioncheck.h
-    src/Model/Node.h
-    src/Common/Builders/nodebuilder.h
-    src/Model/Edge.h
-    src/Common/Builders/edgebuilder.h
-    src/Services/graphconnectioncheck.cpp
-    src/View/graphcheck.h src/View/graphcheck.cpp
-    src/Services/dijkstra.h
-    src/Services/dijkstra.cpp
-    src/Services/distancematrix.h
-    src/Services/distancematrix.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE

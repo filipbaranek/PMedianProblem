@@ -2,17 +2,22 @@
 #include "dijkstra.h"
 #include "../Model/Node.h"
 
-void DistanceMatrix::build(const std::map<int, Node*>& allNodes)
+DistanceMatrix::DistanceMatrix(const std::map<int, Node*>& nodes)
 {
-    for (const auto& [nodeId, node] : allNodes)
+    build(nodes);
+}
+
+void DistanceMatrix::build(const std::map<int, Node*>& nodes)
+{
+    for (const auto& [nodeId, node] : nodes)
     {
         if (node->type() == NodeType::CUSTOMER)
         {
-            auto distances = Dijkstra::computeShortestPaths(node, allNodes);
+            auto distances = Dijkstra::computeShortestPaths(node, nodes);
 
             for(const auto& [targetNodeId, distance] : distances)
             {
-                Node* targetNode = allNodes.at(targetNodeId);
+                Node* targetNode = nodes.at(targetNodeId);
                 if (targetNode->type() == NodeType::STORAGE)
                 {
                     _matrix[node->id()][targetNode->id()] = distance;

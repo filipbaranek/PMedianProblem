@@ -5,12 +5,12 @@
 #include <limits>
 #include <vector>
 
-std::map<int, double> Dijkstra::computeShortestPaths(Node* startNode, const std::map<int, Node*>& allNodes)
+std::map<int, double> Dijkstra::computeShortestPaths(Node* startNode, const std::map<int, Node*>& nodes)
 {
     using Pair = std::pair<double, int>;
 
     std::map<int, double> distances;
-    for (const auto& pair : allNodes)
+    for (const auto& pair : nodes)
     {
         distances[pair.first] = std::numeric_limits<double>::infinity();
     }
@@ -29,7 +29,7 @@ std::map<int, double> Dijkstra::computeShortestPaths(Node* startNode, const std:
             continue;
         }
 
-        Node* currNode = allNodes.at(currentId);
+        Node* currNode = nodes.at(currentId);
 
         for (const auto& [edge, neighbor] : currNode->connectedNodes())
         {
