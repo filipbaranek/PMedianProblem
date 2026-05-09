@@ -1,6 +1,6 @@
 #include "distancematrix.h"
-#include "dijkstra.h"
-#include "../Model/Node.h"
+#include "../Services/dijkstra.h"
+#include "../Model/node.h"
 
 DistanceMatrix::DistanceMatrix(const std::map<int, Node*>& nodes)
 {

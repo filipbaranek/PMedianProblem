@@ -1,5 +1,5 @@
 #include "pmedianevaluator.h"
-#include "../Model/Node.h"
+#include "../Model/node.h"
 #include <stdexcept>
 
 namespace

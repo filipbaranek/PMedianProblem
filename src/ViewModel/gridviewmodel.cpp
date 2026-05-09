@@ -1,8 +1,8 @@
 #include "gridviewmodel.h"
 #include "../Services/filemanager.h"
 #include "../Services/graphconnectioncheck.h"
-#include "../Model/Node.h"
-#include "../Model/Edge.h"
+#include "../Model/node.h"
+#include "../Model/edge.h"
 #include "../Common/Builders/nodebuilder.h"
 #include "../Common/Builders/edgebuilder.h"
 

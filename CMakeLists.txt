@@ -32,7 +32,7 @@ set(SOURCES
     src/Services/graphconnectioncheck.cpp
     src/View/graphcheck.cpp
     src/Services/dijkstra.cpp
-    src/Services/distancematrix.cpp
+    src/Model/distancematrix.cpp
     src/Services/pmedianevaluator.cpp
     src/Services/simulatedannealing.cpp
 )
@@ -55,13 +55,13 @@ set(HEADERS
     src/ViewModel/gridviewmodel.h
     src/Common/idmanager.h
     src/Services/graphconnectioncheck.h
-    src/Model/Node.h
+    src/Model/node.h
     src/Common/Builders/nodebuilder.h
-    src/Model/Edge.h
+    src/Model/edge.h
     src/Common/Builders/edgebuilder.h
     src/View/graphcheck.h
     src/Services/dijkstra.h
-    src/Services/distancematrix.h
+    src/Model/distancematrix.h
     src/Services/pmedianevaluator.h
     src/Services/simulatedannealing.h
     src/Services/ievaluator.h

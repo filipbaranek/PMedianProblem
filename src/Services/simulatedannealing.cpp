@@ -1,6 +1,6 @@
 #include "simulatedannealing.h"
 #include "pmedianevaluator.h"
-#include "../Model/Node.h"
+#include "../Model/node.h"
 #include <cmath>
 
 SimulatedAnnealing::SimulatedAnnealing(const SimulatedAnnealingConfig& config)

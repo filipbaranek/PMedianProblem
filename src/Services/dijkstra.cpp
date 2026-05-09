@@ -1,6 +1,6 @@
 #include "dijkstra.h"
-#include "../Model/Node.h"
-#include "../Model/Edge.h"
+#include "../Model/node.h"
+#include "../Model/edge.h"
 #include <queue>
 #include <limits>
 #include <vector>

@@ -2,7 +2,7 @@
 #define NODEBUILDER_H
 
 #include <stdexcept>
-#include "../../Model/Node.h"
+#include "../../Model/node.h"
 
 class NodeBuilder
 {

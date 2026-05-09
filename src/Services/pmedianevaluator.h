@@ -7,7 +7,7 @@
 #include <limits>
 #include <random>
 #include "ievaluator.h"
-#include "distancematrix.h"
+#include "../Model/distancematrix.h"
 
 struct PMedianConfig
 {

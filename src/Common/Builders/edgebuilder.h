@@ -2,7 +2,7 @@
 #define EDGEBUILDER_H
 
 #include <stdexcept>
-#include "../../Model/Edge.h"
+#include "../../Model/edge.h"
 
 class EdgeBuilder
 {

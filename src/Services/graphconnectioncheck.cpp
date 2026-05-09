@@ -1,6 +1,6 @@
 #include "graphconnectioncheck.h"
-#include "../Model/Node.h"
-#include "../Model/Edge.h"
+#include "../Model/node.h"
+#include "../Model/edge.h"
 #include <vector>
 
 bool GraphConnectionCheck::checkGraphConnection(std::map<int, Node>& nodes)
