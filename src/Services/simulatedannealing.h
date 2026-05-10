@@ -9,10 +9,10 @@ class Node;
 
 struct SimulatedAnnealingConfig
 {
-    double startTemp;
-    double minTemp;
-    double alpha;
-    int    iterPerTemp;
+    double startTemp   = 1000.0;
+    double minTemp     = 0.01;
+    double alpha       = 0.95;
+    int    iterPerTemp = 100;
 };
 
 class SimulatedAnnealing {

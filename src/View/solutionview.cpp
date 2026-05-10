@@ -25,6 +25,8 @@ void PMedianSolutionDialog::initUI()
     _output   = new QTextEdit(this);
     _okButton = new QPushButton("Ok", this);
 
+    _output->setReadOnly(true);
+
     mainLayout->addWidget(_output);
     mainLayout->addSpacing(10);
     mainLayout->addLayout(buttonLayout);
@@ -40,36 +42,48 @@ void PMedianSolutionDialog::loadFromSolution()
 {
     QString text;
 
+    text += R"(
+        <div style='text-align:center; font-size:16px;'>
+    )";
     if (_solution.assignments.empty() || _solution.selectedStorages.empty())
     {
         text += R"(
-            <div align='center'>
-                <h2>No solution to show yet</h2>
-            </div>
+            <h2>No solution to show yet</h2>
         )";
     }
     else
     {
         text += R"(
-            <div align='center'>
-                <h1>P-Median Solution</h1>
-            </div>
+            <h1 style='font-size:32px;'>P-Median Solution</h1>
         )";
-        text += QString("<b>Total cost:</b> %1<br><br>").arg(_solution.totalCost);
-        text += "<b>Selected storages:</b><br>";
+
+        text += QString(
+            "<p><b style='font-size:20px;'>Total cost:</b> "
+            "<span style='font-size:20px;'>%1</span></p>")
+            .arg(_solution.totalCost);
+
+        text += R"(
+            <p><b style='font-size:22px;'>Selected storages:</b></p>
+        )";
 
         for (auto& storage : _solution.selectedStorages)
         {
-            text += QString("&nbsp;&nbsp;&bull; %1<br>").arg(storage._name);
+            text += QString("<p style='font-size:18px;'>&bull; %1</p>").arg(storage._name);
         }
 
-        text += "<br><b>Assignments:</b><br>";
-        for (const auto& [client, storage]
-             : _solution.assignments)
+        text += R"(
+            <br>
+            <p><b style='font-size:22px;'>Assignments:</b></p>
+        )";
+
+        for (const auto& [client, storage] : _solution.assignments)
         {
-            text += QString("&nbsp;&nbsp;%1 &rarr; %2<br>").arg(client._name, storage._name);
+            text += QString("<p style='font-size:18px;'>%1 &rarr; %2</p>")
+                .arg(client._name, storage._name);
         }
     }
+
+    text += "</div>";
 
     _output->setHtml(text);
 }

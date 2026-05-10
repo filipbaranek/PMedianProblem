@@ -53,7 +53,7 @@ private:
     std::map<int, NodeData> _nodes;
     std::map<int, EdgeData> _edges;
 
-    PMedianSolution _lastSol;
+    PMedianSolutionView _lastSol;
 
     PMedianConfig            _pMedianConfig;
     SimulatedAnnealingConfig _simAnnealConfig;

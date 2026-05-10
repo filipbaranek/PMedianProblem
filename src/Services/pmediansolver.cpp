@@ -6,7 +6,13 @@ PMedianSolution PMedianSolver::solve(
     const SimulatedAnnealingConfig& simAnnealConfig,
     std::map<int, Node>&            nodes)
 {
-    PMedianEvaluator   evaluator(pmedianConfig, nodes);
+    PMedianEvaluator evaluator(pmedianConfig, nodes);
+
+    if (!evaluator.canEvaluate())
+    {
+        return {};
+    }
+
     SimulatedAnnealing simAnneal(simAnnealConfig);
 
     std::shared_ptr<PMedianSolution> solution =

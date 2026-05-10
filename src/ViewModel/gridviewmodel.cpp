@@ -171,16 +171,19 @@ void GridViewModel::solvePMedianProblem()
 
     if (!GraphConnectionCheck::checkGraphConnection(nodeModels))
     {
-        emit onCheckGraphConnection("There needs to be only 1 graph to run solver algorithm");
+        emit onCheckGraphConnection("There needs to be only 1 graph to run solver");
         return;
     }
 
-    _lastSol = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, nodeModels);
+    PMedianSolution rawSol = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, nodeModels);
 
-    emit onShowOutput(solutionToSolutionView(_lastSol));
+    _lastSol = {};
+    _lastSol = solutionToSolutionView(rawSol);
+
+    emit onShowOutput(_lastSol);
 }
 
 void GridViewModel::showLastSolutionOutput()
 {
-    emit onShowOutput(solutionToSolutionView(_lastSol));
+    emit onShowOutput(_lastSol);
 }

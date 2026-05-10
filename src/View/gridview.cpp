@@ -132,7 +132,7 @@ void Grid::mousePressEvent(QMouseEvent* event)
                 emit onUpdateNode(NodeData{
                     foundNode->id(),
                     foundNode->name(),
-                    static_cast<int32_t>(foundNode->type()),
+                    static_cast<int32_t>(foundNode->nodeType()),
                     foundNode->posX(),
                     foundNode->posY(),
                     foundNode->fixedCosts()
@@ -339,7 +339,7 @@ void Grid::initNodeConnections(NodeView *node)
     emit onAddNode(NodeData{
         node->id(),
         node->name(),
-        static_cast<int32_t>(node->type()),
+        static_cast<int32_t>(node->nodeType()),
         node->posX(),
         node->posY(),
         node->fixedCosts()

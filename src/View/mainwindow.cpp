@@ -43,7 +43,7 @@ void MainWindow::initConnections()
     connect(_ui->graphicsView, &Grid::onAddEdge, _viewModel, &GridViewModel::setEdge);
     connect(_ui->graphicsView, &Grid::onUpdateNode, _viewModel, &GridViewModel::setNode);
     connect(_ui->graphicsView, &Grid::onUpdateEdge, _viewModel, &GridViewModel::setEdge);
-    connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeNode);
+    connect(_ui->graphicsView, &Grid::onDeleteNode, _viewModel, &GridViewModel::removeNode);
     connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeEdge);
     connect(_viewModel, &GridViewModel::onLoadFromFile, _ui->graphicsView, &Grid::insertItemsFromFile);
     connect(_viewModel, &GridViewModel::onCheckGraphConnection, [](const QString& message) {

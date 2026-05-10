@@ -29,10 +29,10 @@ void ParameterDialog::initUI()
     _p = new QSpinBox(this);
     _p->setMinimum(1);
     _p->setMaximum(1000);
-    _p->setValue(1);
+    _p->setValue(_pMedianConfig.p);
 
     _transportCosts = new QDoubleSpinBox(this);
-    _transportCosts->setMinimum(0.0);
+    _transportCosts->setMinimum(1.0);
     _transportCosts->setMaximum(std::numeric_limits<double>::max());
     _transportCosts->setDecimals(4);
     _transportCosts->setValue(_pMedianConfig.transportCosts);

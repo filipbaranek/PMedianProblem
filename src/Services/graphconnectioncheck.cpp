@@ -14,7 +14,10 @@ bool GraphConnectionCheck::checkGraphConnection(std::map<int, Node>& nodes)
 
     while (!visitedNodes.empty())
     {
-        auto* currentNode    = visitedNodes.back();
+        auto* currentNode = visitedNodes.back();
+
+        visitedNodes.pop_back();
+
         auto& connectedNodes = currentNode->connectedNodes();
 
         for (auto& [edge, connectedNode] : connectedNodes)
@@ -25,8 +28,6 @@ bool GraphConnectionCheck::checkGraphConnection(std::map<int, Node>& nodes)
                 visitedNodes.push_back(connectedNode);
             }
         }
-
-        visitedNodes.pop_back();
     }
 
     for (auto& [id, node] : nodes)

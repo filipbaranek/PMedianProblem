@@ -5,8 +5,8 @@
 
 enum class NodeType : int32_t
 {
-    STORAGE,
-    CUSTOMER
+    STORAGE  = 0,
+    CUSTOMER = 1
 };
 
 #endif // NODETYPE_H

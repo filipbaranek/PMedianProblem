@@ -19,8 +19,8 @@ struct NodeDataComparator
 
 struct PMedianConfig
 {
-    int    p;
-    double transportCosts;
+    int    p              = 1;
+    double transportCosts = 1.0;
 };
 
 struct PMedianSolution : ISolution
@@ -45,6 +45,11 @@ public:
     std::shared_ptr<ISolution> getNeighbor(ISolution& currentSolution) const override;
 
     void evaluate(ISolution& solution) const override;
+
+    bool canEvaluate() const
+    {
+        return !_storages.empty() && !_customers.empty();
+    }
 
 private:
     mutable std::mt19937        _rng;
