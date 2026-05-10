@@ -19,6 +19,12 @@ public:
         return *this;
     }
 
+    NodeBuilder& name(const QString& name)
+    {
+        _node._name = name;
+        return *this;
+    }
+
     NodeBuilder& type(const NodeType& type)
     {
         _node._type = type;
@@ -36,6 +42,10 @@ public:
         if (_node._id == -1)
         {
             throw std::logic_error("Error while constructing Node: ID parameter is mandatory");
+        }
+        if (_node._name.isEmpty())
+        {
+            _node._name = QString::number(_node._id);
         }
 
         return std::move(_node);

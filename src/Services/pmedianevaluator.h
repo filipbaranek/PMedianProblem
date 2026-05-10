@@ -7,6 +7,15 @@
 #include <random>
 #include "ievaluator.h"
 #include "../Model/distancematrix.h"
+#include "../Common/dtos.h"
+
+struct NodeDataComparator
+{
+    bool operator()(const NodeData& first, const NodeData& second) const
+    {
+        return first._id < second._id;
+    }
+};
 
 struct PMedianConfig
 {
@@ -20,10 +29,16 @@ struct PMedianSolution : ISolution
     std::set<Node*>        selectedStorages;
 };
 
+struct PMedianSolutionView : ISolution
+{
+    std::map<NodeData, NodeData, NodeDataComparator> assignments;
+    std::set<NodeData, NodeDataComparator>           selectedStorages;
+};
+
 class PMedianEvaluator : public IEvaluator
 {
 public:
-    PMedianEvaluator(const PMedianConfig& config, const std::map<int, Node*>& nodes);
+    PMedianEvaluator(const PMedianConfig& config, std::map<int, Node>& nodes);
 
     std::shared_ptr<ISolution> initialSolution() const override;
 
@@ -33,7 +48,6 @@ public:
 
 private:
     mutable std::mt19937        _rng;
-    const std::map<int, Node*>& _nodes;
     const PMedianConfig&        _config;
     const DistanceMatrix        _distMatrix;
     std::vector<Node*>          _storages;

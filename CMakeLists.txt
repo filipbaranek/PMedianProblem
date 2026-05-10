@@ -77,6 +77,8 @@ qt_add_executable(PMedianProblem
     ${HEADERS}
     ${VIEWS}
     src/Services/pmediansolver.cpp
+    src/View/solutionview.h
+    src/View/solutionview.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE

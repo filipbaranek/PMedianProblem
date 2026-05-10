@@ -89,7 +89,7 @@ void NodeView::setNodeType(const NodeType& type)
     _type = type;
     if (type == NodeType::STORAGE)
     {
-        setBrush(Qt::darkGreen);
+        setBrush(Qt::magenta);
     }
     else
     {

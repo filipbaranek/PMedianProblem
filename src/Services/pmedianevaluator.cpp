@@ -14,10 +14,9 @@ enum class NeighborhoodType
 
 } // namespace
 
-PMedianEvaluator::PMedianEvaluator(const PMedianConfig& config, const std::map<int, Node*>& nodes)
+PMedianEvaluator::PMedianEvaluator(const PMedianConfig& config, std::map<int, Node>& nodes)
     : _config(config)
     , _distMatrix(nodes)
-    , _nodes(nodes)
 {
     if (config.p > nodes.size())
     {
@@ -27,15 +26,18 @@ PMedianEvaluator::PMedianEvaluator(const PMedianConfig& config, const std::map<i
     std::random_device rd;
     _rng.seed(rd());
 
-    for(const auto& [id, node] : _nodes)
+    _customers.reserve(nodes.size());
+    _storages.reserve(nodes.size());
+
+    for(auto& [id, node] : nodes)
     {
-        if(node->type() == NodeType::CUSTOMER)
+        if(node.type() == NodeType::CUSTOMER)
         {
-            _customers.push_back(node);
+            _customers.push_back(&node);
         }
-        else if (node->type() == NodeType::STORAGE)
+        else if (node.type() == NodeType::STORAGE)
         {
-            _storages.push_back(node);
+            _storages.push_back(&node);
         }
     }
 }

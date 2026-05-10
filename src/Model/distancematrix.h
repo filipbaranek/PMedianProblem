@@ -7,7 +7,7 @@ class Node;
 
 class DistanceMatrix {
 public:
-    DistanceMatrix(const std::map<int, Node*>& nodes);
+    DistanceMatrix(const std::map<int, Node>& nodes);
 
     double distance(int customerId, int storageId) const
     {
@@ -15,7 +15,7 @@ public:
     }
 
 private:
-    void build(const std::map<int, Node*>& nodes);
+    void build(const std::map<int, Node>& nodes);
 
 private:
     std::map<int, std::map<int, double>> _matrix;

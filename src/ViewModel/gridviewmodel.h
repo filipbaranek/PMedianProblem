@@ -7,6 +7,7 @@
 #include "../Services/pmedianevaluator.h"
 #include "../Services/simulatedannealing.h"
 
+class Edge;
 class FileManager;
 
 class GridViewModel : public QObject
@@ -42,11 +43,15 @@ public slots:
 signals:
     void onCheckGraphConnection(const QString& message);
 
+    void onShowOutput(const PMedianSolutionView& solution);
+
     void onLoadFromFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges);
 
 private:
     std::map<int, NodeData> _nodes;
     std::map<int, EdgeData> _edges;
+
+    PMedianSolution _lastSol;
 
     PMedianConfig            _pMedianConfig;
     SimulatedAnnealingConfig _simAnnealConfig;

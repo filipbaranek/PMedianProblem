@@ -7,6 +7,80 @@
 #include "../Common/Builders/nodebuilder.h"
 #include "../Common/Builders/edgebuilder.h"
 
+namespace
+{
+
+NodeData modelToView(const Node& model)
+{
+    NodeData data;
+    data._id         = model.id();
+    data._name       = model.name();
+    data._type       = static_cast<int32_t>(model.type());
+    data._fixedCosts = model.fixedCosts();
+
+    return data;
+}
+
+PMedianSolutionView solutionToSolutionView(const PMedianSolution& solution)
+{
+    PMedianSolutionView solutionView;
+
+    solutionView.totalCost = solution.totalCost;
+
+    for (auto& [customer, storage] : solution.assignments)
+    {
+        solutionView.assignments.emplace(modelToView(*customer), modelToView(*storage));
+    }
+
+    for (auto* storage : solution.selectedStorages)
+    {
+        solutionView.selectedStorages.emplace(modelToView(*storage));
+    }
+
+    return solutionView;
+}
+
+std::pair<std::map<int, Node>, std::map<int, Edge>>
+dtosToModels(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges)
+{
+    std::pair<std::map<int, Node>, std::map<int, Edge>> models;
+    auto& [nodeModels, edgeModels] = models;
+
+    for (auto& [id, node] : nodes)
+    {
+        nodeModels.emplace(id, NodeBuilder()
+            .id(id)
+            .name(node._name)
+            .type(static_cast<NodeType>(node._type))
+            .fixedCosts(node._fixedCosts)
+            .build());
+    }
+
+    for (auto& [id, edge] : edges)
+    {
+        Node* from = &nodeModels.at(edge._from);
+        Node* to   = &nodeModels.at(edge._to);
+
+        auto [it, inserted] = edgeModels.emplace(id, EdgeBuilder()
+            .id(id)
+            .from(from)
+            .to(to)
+            .distance(edge._distance)
+            .isOriented(edge._isOriented)
+            .isValid(edge._isValid)
+            .build());
+
+        Edge* newEdge = &it->second;
+
+        from->connectNode(newEdge, to);
+        to->connectNode(newEdge, from);
+    }
+
+    return models;
+}
+
+} // namespace
+
 GridViewModel::GridViewModel(std::shared_ptr<FileManager> fileManager, QObject* parent)
     : QObject(parent)
     , _pMedianConfig{}
@@ -81,37 +155,7 @@ void GridViewModel::checkGraphConnection()
         return;
     }
 
-    std::map<int, Node> nodeModels;
-    std::map<int, Edge> edgeModels;
-
-    for (auto& [id, node] : _nodes)
-    {
-        nodeModels.emplace(id, NodeBuilder()
-            .id(id)
-            .type(static_cast<NodeType>(node._type))
-            .fixedCosts(node._fixedCosts)
-            .build());
-    }
-
-    for (auto& [id, edge] : _edges)
-    {
-        Node* from = &nodeModels.at(edge._from);
-        Node* to   = &nodeModels.at(edge._to);
-
-        auto [it, inserted] = edgeModels.emplace(id, EdgeBuilder()
-            .id(id)
-            .from(from)
-            .to(to)
-            .distance(edge._distance)
-            .isOriented(edge._isOriented)
-            .isValid(edge._isValid)
-            .build());
-
-        Edge* newEdge = &it->second;
-
-        from->connectNode(newEdge, to);
-        to->connectNode(newEdge, from);
-    }
+    auto [nodeModels, edgeModels] = dtosToModels(_nodes, _edges);
 
     bool isGraphConnected = GraphConnectionCheck::checkGraphConnection(nodeModels);
 
@@ -122,10 +166,21 @@ void GridViewModel::checkGraphConnection()
 
 void GridViewModel::solvePMedianProblem()
 {
-    // TODO - common parser logic from DTO to Model
+    if (_nodes.empty())
+    {
+        emit onCheckGraphConnection("There is no graph yet to solve");
+        return;
+    }
 
-    // PMedianSolution solution = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, );
+    auto [nodeModels, edgeModels] = dtosToModels(_nodes, _edges);
 
-    // TODO - signal result window
-    // TODO - update GUI colors
+    if (!GraphConnectionCheck::checkGraphConnection(nodeModels))
+    {
+        emit onCheckGraphConnection("There needs to be only 1 graph to run solver algorithm");
+        return;
+    }
+
+    _lastSol = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, nodeModels);
+
+    emit onShowOutput(solutionToSolutionView(_lastSol));
 }

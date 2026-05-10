@@ -2,6 +2,7 @@
 #define NODE_H
 
 #include <map>
+#include <QString>
 #include "../Common/nodetype.h"
 
 class Edge;
@@ -16,6 +17,11 @@ public:
     const int id() const
     {
         return _id;
+    }
+
+    const QString& name() const
+    {
+        return _name;
     }
 
     const bool isMarked() const
@@ -51,6 +57,7 @@ public:
     friend class NodeBuilder;
 
 private:
+    QString                _name;
     int                    _id;
     bool                   _isMarked;
     NodeType               _type;

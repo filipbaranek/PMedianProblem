@@ -5,19 +5,19 @@
 #include <limits>
 #include <vector>
 
-std::map<int, double> Dijkstra::computeShortestPaths(Node* startNode, const std::map<int, Node*>& nodes)
+std::map<int, double> Dijkstra::computeShortestPaths(const Node& startNode, const std::map<int, Node>& nodes)
 {
     using Pair = std::pair<double, int>;
 
     std::map<int, double> distances;
-    for (const auto& pair : nodes)
+    for (const auto& [id, node] : nodes)
     {
-        distances[pair.first] = std::numeric_limits<double>::infinity();
+        distances[id] = std::numeric_limits<double>::infinity();
     }
-    distances[startNode->id()] = 0.0;
+    distances[startNode.id()] = 0.0;
 
     std::priority_queue<Pair, std::vector<Pair>, std::greater<Pair>> pq;
-    pq.push({0.0, startNode->id()});
+    pq.push({0.0, startNode.id()});
 
     while (!pq.empty())
     {
@@ -29,15 +29,15 @@ std::map<int, double> Dijkstra::computeShortestPaths(Node* startNode, const std:
             continue;
         }
 
-        Node* currNode = nodes.at(currentId);
+        const Node& currNode = nodes.at(currentId);
 
-        for (const auto& [edge, neighbor] : currNode->connectedNodes())
+        for (const auto& [edge, neighbor] : currNode.connectedNodes())
         {
             if (!edge->isValid())
             {
                 continue;
             }
-            if (edge->isOriented() && edge->from() != currNode)
+            if (edge->isOriented() && edge->from() != &currNode)
             {
                 continue;
             }

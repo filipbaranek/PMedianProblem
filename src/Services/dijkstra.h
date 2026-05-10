@@ -9,7 +9,7 @@ class Dijkstra {
 public:
     Dijkstra() = delete;
 
-    static std::map<int, double> computeShortestPaths(Node* startNode, const std::map<int, Node*>& nodes);
+    static std::map<int, double> computeShortestPaths(const Node& startNode, const std::map<int, Node>& nodes);
 };
 
 #endif // DIJKSTRA_H

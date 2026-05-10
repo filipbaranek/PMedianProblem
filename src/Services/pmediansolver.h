@@ -9,9 +9,9 @@ class PMedianSolver
 public:
     PMedianSolver() = delete;
 
-    static PMedianSolution solve(const PMedianConfig& pmedianConfig,
+    static PMedianSolution solve(const PMedianConfig&            pmedianConfig,
                                  const SimulatedAnnealingConfig& simAnnealConfig,
-                                 const std::map<int, Node*>& nodes);
+                                 std::map<int, Node>&            nodes);
 };
 
 #endif // PMEDIANSOLVER_H
