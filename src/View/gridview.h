@@ -8,6 +8,7 @@ class IdManager;
 class NodeView;
 class EdgeView;
 class CreateEdgeEvent;
+class PMedianSolutionView;
 
 class Grid : public QGraphicsView
 {
@@ -31,6 +32,10 @@ protected:
 public slots:
     void insertItemsFromFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges);
 
+    void drawSolution(const PMedianSolutionView& solution);
+
+    void clearSolution(const PMedianSolutionView& solution);
+
     void setEuclideanMode(bool toggled);
 
 signals:
@@ -48,6 +53,8 @@ signals:
 
     void onClear();
 
+    void onClearSolution();
+
 private:
     void clearLayout();
 
@@ -59,7 +66,7 @@ private:
 
     void addNodeAt(const QPointF& pos);
 
-    void addEdgeBetween(NodeView* from, NodeView* to);
+    void addEdgeBetween(NodeView* from, NodeView* to, bool isSolutionEdge = false);
 
     void deleteNode(NodeView* node);
 

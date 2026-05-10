@@ -29,6 +29,8 @@ public:
 
     void setIsOriented(const bool& isOriented);
 
+    void setIsSolutionEdge(const bool& isSolutionEdge);
+
     void setDistance(const double distance);
 
     void setDistance();
@@ -44,6 +46,8 @@ public:
     const bool isValid() const;
 
     const bool isOriented() const;
+
+    const bool isSolutionEdge() const;
 
     const double distance() const;
 
@@ -64,6 +68,7 @@ private:
     bool      _useEuclideanDistance;
     bool      _isValid;
     bool      _isOriented;
+    bool      _isSolutionEdge;
     double    _distance;
 };
 

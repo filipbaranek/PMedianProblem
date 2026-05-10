@@ -1,7 +1,7 @@
 #ifndef NODEVIEW_H
 #define NODEVIEW_H
 
-#include <set>
+#include <map>
 #include <QGraphicsEllipseItem>
 #include "../../Common/nodetype.h"
 #include "../../Common/dtos.h"
@@ -31,9 +31,7 @@ public:
 
     bool isConnectedTo(NodeView* node) const;
 
-    const std::set<EdgeView*>& edges() const;
-
-    const std::set<NodeView*>& connectedNodes() const;
+    const std::map<NodeView*, EdgeView*>& connectedNodes() const;
 
     void setName(const QString& name);
 
@@ -45,13 +43,9 @@ public:
 
     void setFixedCosts(const double fixedCosts);
 
-    void connectNode(NodeView* node);
+    void connectNode(NodeView* node, EdgeView* edge);
 
     void disconnectNode(NodeView* node);
-
-    void addEdge(EdgeView* edge);
-
-    void removeEdge(EdgeView* edge);
 
     NodeData toDTO() override;
 
@@ -69,15 +63,14 @@ protected:
     QVariant itemChange(GraphicsItemChange change, const QVariant& value) override;
 
 private:
-    int                 _id;
-    QString             _name;
-    NodeType            _type;
-    double              _posX;
-    double              _posY;
-    double              _fixedCosts;
-    QGraphicsTextItem*  _label;
-    std::set<EdgeView*> _edges;
-    std::set<NodeView*> _connectedNodes;
+    int                            _id;
+    QString                        _name;
+    NodeType                       _type;
+    double                         _posX;
+    double                         _posY;
+    double                         _fixedCosts;
+    QGraphicsTextItem*             _label;
+    std::map<NodeView*, EdgeView*> _connectedNodes;
 
     static constexpr float RADIUS = 30.0f;
 };

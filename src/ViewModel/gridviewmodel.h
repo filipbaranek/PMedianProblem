@@ -40,12 +40,16 @@ public slots:
 
     void clear();
 
+    void clearSolution();
+
 signals:
     void onCheckGraphConnection(const QString& message);
 
     void onUpdateConfigs(PMedianConfig& pMedianConfig, SimulatedAnnealingConfig& simAnnealCOnfig);
 
     void onShowOutput(const PMedianSolutionView& solution);
+
+    void onClearSolution(const PMedianSolutionView& solution);
 
     void onLoadFromFile(const std::map<int, NodeData>& nodes, const std::map<int, EdgeData>& edges);
 

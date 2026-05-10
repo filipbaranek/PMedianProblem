@@ -67,12 +67,7 @@ bool NodeView::isConnectedTo(NodeView* node) const
     return _connectedNodes.contains(node);
 }
 
-const std::set<EdgeView*>& NodeView::edges() const
-{
-    return _edges;
-}
-
-const std::set<NodeView*>& NodeView::connectedNodes() const
+const std::map<NodeView*, EdgeView*>& NodeView::connectedNodes() const
 {
     return _connectedNodes;
 }
@@ -112,24 +107,14 @@ void NodeView::setFixedCosts(const double fixedCosts)
     _fixedCosts = fixedCosts;
 }
 
-void NodeView::connectNode(NodeView *node)
+void NodeView::connectNode(NodeView* node, EdgeView* edge)
 {
-    _connectedNodes.insert(node);
+    _connectedNodes[node] = edge;
 }
 
 void NodeView::disconnectNode(NodeView* node)
 {
     _connectedNodes.erase(node);
-}
-
-void NodeView::addEdge(EdgeView* edge)
-{
-    _edges.insert(edge);
-}
-
-void NodeView::removeEdge(EdgeView* edge)
-{
-    _edges.erase(edge);
 }
 
 NodeData NodeView::toDTO()
@@ -154,7 +139,7 @@ QVariant NodeView::itemChange(GraphicsItemChange change, const QVariant& value)
         _posX = newPos.x();
         _posY = newPos.y();
 
-        for (auto& edge : _edges)
+        for (auto& [node, edge] : _connectedNodes)
         {
             edge->updatePosition();
         }

@@ -45,14 +45,17 @@ void MainWindow::initConnections()
     connect(_ui->graphicsView, &Grid::onUpdateEdge, _viewModel, &GridViewModel::setEdge);
     connect(_ui->graphicsView, &Grid::onDeleteNode, _viewModel, &GridViewModel::removeNode);
     connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeEdge);
+    connect(_ui->graphicsView, &Grid::onClearSolution, _viewModel, &GridViewModel::clearSolution);
+    connect(_viewModel, &GridViewModel::onClearSolution, _ui->graphicsView, &Grid::clearSolution);
     connect(_viewModel, &GridViewModel::onLoadFromFile, _ui->graphicsView, &Grid::insertItemsFromFile);
-    connect(_viewModel, &GridViewModel::onCheckGraphConnection, [](const QString& message) {
-        GraphCheck graphCheckDialog(message);
-        graphCheckDialog.exec();
-    });
+    connect(_viewModel, &GridViewModel::onShowOutput, _ui->graphicsView, &Grid::drawSolution);
     connect(_viewModel, &GridViewModel::onShowOutput, [](const PMedianSolutionView& solution) {
         PMedianSolutionDialog outputDialog(solution);
         outputDialog.exec();
+    });
+    connect(_viewModel, &GridViewModel::onCheckGraphConnection, [](const QString& message) {
+        GraphCheck graphCheckDialog(message);
+        graphCheckDialog.exec();
     });
     connect(_viewModel, &GridViewModel::onUpdateConfigs, [](
         PMedianConfig& pMedianConfig, SimulatedAnnealingConfig& simAnnealConfig) {

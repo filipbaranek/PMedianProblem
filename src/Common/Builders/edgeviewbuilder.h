@@ -45,6 +45,12 @@ public:
         return *this;
     }
 
+    EdgeViewBuilder& isSolutionEdge(bool isSolutionEdge)
+    {
+        _isSolutionEdge = isSolutionEdge;
+        return *this;
+    }
+
     EdgeViewBuilder& distance(double distance)
     {
         _distance = distance;
@@ -66,6 +72,7 @@ public:
         edge->setUseEuclideanDistance(_useEuclideanDistance);
         edge->setIsValid(_isValid);
         edge->setIsOriented(_isOriented);
+        edge->setIsSolutionEdge(_isSolutionEdge);
 
         if (_useEuclideanDistance)
         {
@@ -88,6 +95,7 @@ private:
     bool      _useEuclideanDistance{true};
     bool      _isValid{true};
     bool      _isOriented{};
+    bool      _isSolutionEdge{};
     double    _distance{};
 };
 

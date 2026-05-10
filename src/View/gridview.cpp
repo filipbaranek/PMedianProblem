@@ -3,11 +3,12 @@
 #include "Workspace/GridScene.h"
 #include "Workspace/NodeView.h"
 #include "Workspace/CreateEdgeEvent.h"
+#include "editnodeview.h"
+#include "editedgeview.h"
+#include "../Services/pmedianevaluator.h"
 #include "../Common/Builders/edgeviewbuilder.h"
 #include "../Common/Builders/nodeviewbuilder.h"
 #include "../Common/idmanager.h"
-#include "editnodeview.h"
-#include "editedgeview.h"
 #include <functional>
 #include <QGraphicsScene>
 #include <QWheelEvent>
@@ -91,6 +92,10 @@ void Grid::contextMenuEvent(QContextMenuEvent* event)
         _edgeEvent->setVisible(true);
         setCursor(Qt::CrossCursor);
         setDragMode(QGraphicsView::NoDrag);
+    });
+
+    menu.addAction("Clear solution", [this]() {
+        emit onClearSolution();
     });
 
     menu.addAction("Clear", [this]() {
@@ -293,10 +298,56 @@ void Grid::insertItemsFromFile(const std::map<int, NodeData>& nodes, const std::
 
         _scene->addItem(edgeItem);
 
-        from->connectNode(to);
-        to->connectNode(from);
+        from->connectNode(to, edgeItem);
+        to->connectNode(from, edgeItem);
 
         initEdgeConnections(edgeItem);
+    }
+}
+
+void Grid::drawSolution(const PMedianSolutionView& solution)
+{
+    std::map<int, NodeView*> nodeLookup;
+    for (QGraphicsItem* item : _scene->items())
+    {
+        auto* nodeView = dynamic_cast<NodeView*>(item);
+        if (nodeView != nullptr)
+        {
+            nodeLookup[nodeView->id()] = nodeView;
+        }
+    }
+
+    for (const auto& [customerData, storageData] : solution.assignments)
+    {
+        auto customerIt = nodeLookup.find(customerData._id);
+        auto storageIt  = nodeLookup.find(storageData._id);
+
+        if (customerIt != nodeLookup.end() && storageIt != nodeLookup.end())
+        {
+            NodeView* customerNode = customerIt->second;
+            NodeView* storageNode  = storageIt->second;
+
+            storageNode->setBrush(Qt::green);
+
+            addEdgeBetween(customerNode, storageNode, true);
+        }
+    }
+}
+
+void Grid::clearSolution(const PMedianSolutionView& solution)
+{
+    for (QGraphicsItem* item : _scene->items())
+    {
+        auto* nodeView = dynamic_cast<NodeView*>(item);
+        if (nodeView != nullptr && nodeView->nodeType() == NodeType::STORAGE)
+        {
+            nodeView->setBrush(Qt::magenta);
+        }
+        auto* edgeView = dynamic_cast<EdgeView*>(item);
+        if (edgeView != nullptr && edgeView->isSolutionEdge())
+        {
+            deleteEdge(edgeView);
+        }
     }
 }
 
@@ -365,13 +416,12 @@ void Grid::initEdgeConnections(EdgeView *edge)
 
 void Grid::deleteNode(NodeView* node)
 {
-    for (auto* edge : node->edges())
+    for (auto& [node, edge] : node->connectedNodes())
     {
         _scene->removeItem(edge);
 
         auto* connectedNode = edge->from() != node ? edge->from() : edge->to();
         connectedNode->disconnectNode(node);
-        connectedNode->removeEdge(edge);
 
         delete edge;
     }
@@ -387,8 +437,6 @@ void Grid::deleteEdge(EdgeView* edge)
 {
     edge->to()->disconnectNode(edge->from());
     edge->from()->disconnectNode(edge->to());
-    edge->to()->removeEdge(edge);
-    edge->from()->removeEdge(edge);
 
     _scene->removeItem(edge);
 
@@ -410,11 +458,19 @@ void Grid::addNodeAt(const QPointF& pos)
     initNodeConnections(node);
 }
 
-void Grid::addEdgeBetween(NodeView* from, NodeView* to)
+void Grid::addEdgeBetween(NodeView* from, NodeView* to, bool isSolutionEdge)
 {
-    if (!from || !to || from == to || from->isConnectedTo(to))
+    if (!from || !to || from == to)
     {
         return;
+    }
+    if (from->isConnectedTo(to))
+    {
+        auto* connectedEdge = from->connectedNodes().at(to);
+        if (!isSolutionEdge || connectedEdge->isSolutionEdge())
+        {
+            return;
+        }
     }
 
     EdgeView* edge = EdgeViewBuilder()
@@ -422,12 +478,13 @@ void Grid::addEdgeBetween(NodeView* from, NodeView* to)
         .from(from)
         .to(to)
         .useEuclideanDistance(_useEuclideanDistance)
+        .isSolutionEdge(isSolutionEdge)
         .build();
 
     _scene->addItem(edge);
 
-    from->connectNode(to);
-    to->connectNode(from);
+    from->connectNode(to, edge);
+    to->connectNode(from, edge);
 
     initEdgeConnections(edge);
 }

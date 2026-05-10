@@ -142,6 +142,11 @@ void GridViewModel::clear()
     _edges.clear();
 }
 
+void GridViewModel::clearSolution()
+{
+    emit onClearSolution(_lastSol);
+}
+
 void GridViewModel::checkGraphConnection()
 {
     if (_nodes.empty())

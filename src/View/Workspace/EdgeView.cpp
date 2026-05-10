@@ -73,13 +73,11 @@ void EdgeView::setFrom(const QString& from)
 void EdgeView::setFrom(NodeView* from)
 {
     _from = from;
-    _from->addEdge(this);
 }
 
 void EdgeView::setTo(NodeView* to)
 {
     _to = to;
-    _to->addEdge(this);
 }
 
 void EdgeView::setUseEuclideanDistance(const bool& useEuclideanDistance)
@@ -96,6 +94,11 @@ void EdgeView::setIsOriented(const bool& isOriented)
 {
     _isOriented = isOriented;
     update(boundingRect());
+}
+
+void EdgeView::setIsSolutionEdge(const bool& isSolutionEdge)
+{
+    _isSolutionEdge = isSolutionEdge;
 }
 
 void EdgeView::setDistance(const double distance)
@@ -138,6 +141,11 @@ const bool EdgeView::isOriented() const
     return _isOriented;
 }
 
+const bool EdgeView::isSolutionEdge() const
+{
+    return _isSolutionEdge;
+}
+
 const double EdgeView::distance() const
 {
     return _distance;
@@ -164,7 +172,7 @@ void EdgeView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
     QPen pen;
     if (_isValid)
     {
-        pen = QPen(Qt::cyan, 2);
+        pen = _isSolutionEdge ? QPen(Qt::yellow) : QPen(Qt::cyan, 2);
     }
     else
     {
