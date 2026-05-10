@@ -147,6 +147,11 @@ void GridViewModel::clearSolution()
     emit onClearSolution(_lastSol);
 }
 
+void GridViewModel::showLastSolutionOutput()
+{
+    emit onShowOutput(_lastSol);
+}
+
 void GridViewModel::checkGraphConnection()
 {
     if (_nodes.empty())
@@ -182,13 +187,10 @@ void GridViewModel::solvePMedianProblem()
 
     PMedianSolution rawSol = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, nodeModels);
 
+    emit onClearSolution(_lastSol);
+
     _lastSol = {};
     _lastSol = solutionToSolutionView(rawSol);
 
-    emit onShowOutput(_lastSol);
-}
-
-void GridViewModel::showLastSolutionOutput()
-{
     emit onShowOutput(_lastSol);
 }

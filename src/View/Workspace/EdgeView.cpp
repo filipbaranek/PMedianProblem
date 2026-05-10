@@ -188,8 +188,8 @@ void EdgeView::paint(QPainter* painter, const QStyleOptionGraphicsItem* option, 
 
         QPointF offset(std::cos(angle) * nodeRadius, std::sin(angle) * nodeRadius);
         QPointF arrowTip = line().p2() - offset;
-        QPointF arrowP1 = arrowTip - QPointF(std::cos(angle + M_PI / 6) * 10, std::sin(angle + M_PI / 6) * 10);
-        QPointF arrowP2 = arrowTip - QPointF(std::cos(angle - M_PI / 6) * 10, std::sin(angle - M_PI / 6) * 10);
+        QPointF arrowP1  = arrowTip - QPointF(std::cos(angle + M_PI / 6) * 10, std::sin(angle + M_PI / 6) * 10);
+        QPointF arrowP2  = arrowTip - QPointF(std::cos(angle - M_PI / 6) * 10, std::sin(angle - M_PI / 6) * 10);
 
         painter->drawLine(arrowTip, arrowP1);
         painter->drawLine(arrowTip, arrowP2);

@@ -416,11 +416,10 @@ void Grid::initEdgeConnections(EdgeView *edge)
 
 void Grid::deleteNode(NodeView* node)
 {
-    for (auto& [node, edge] : node->connectedNodes())
+    for (auto& [connectedNode, edge] : node->connectedNodes())
     {
         _scene->removeItem(edge);
 
-        auto* connectedNode = edge->from() != node ? edge->from() : edge->to();
         connectedNode->disconnectNode(node);
 
         delete edge;
