@@ -131,14 +131,9 @@ void GridViewModel::removeEdge(int id)
     _edges.erase(id);
 }
 
-void GridViewModel::updateConfig(const PMedianConfig& config)
+void GridViewModel::updateConfigs()
 {
-    _pMedianConfig = config;
-}
-
-void GridViewModel::updateConfig(const SimulatedAnnealingConfig& config)
-{
-    _simAnnealConfig = config;
+    emit onUpdateConfigs(_pMedianConfig, _simAnnealConfig);
 }
 
 void GridViewModel::clear()
@@ -182,5 +177,10 @@ void GridViewModel::solvePMedianProblem()
 
     _lastSol = PMedianSolver::solve(_pMedianConfig, _simAnnealConfig, nodeModels);
 
+    emit onShowOutput(solutionToSolutionView(_lastSol));
+}
+
+void GridViewModel::showLastSolutionOutput()
+{
     emit onShowOutput(solutionToSolutionView(_lastSol));
 }

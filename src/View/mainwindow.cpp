@@ -1,13 +1,15 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 #include "graphcheck.h"
+#include "solutionview.h"
+#include "parameterview.h"
 #include "../ViewModel/gridviewmodel.h"
 #include <QVBoxLayout>
 
 MainWindow::MainWindow(GridViewModel* viewModel, QWidget* parent)
-    : QMainWindow(parent),
-      _ui(new Ui::MainWindow),
-      _viewModel(viewModel)
+    : QMainWindow(parent)
+    , _ui(new Ui::MainWindow)
+    , _viewModel(viewModel)
 {
     setWindowTitle("P-Median problem");
 
@@ -25,7 +27,10 @@ MainWindow::~MainWindow()
 void MainWindow::initConnections()
 {
     // ToolBar
+    connect(_ui->actionRun, &QAction::triggered, _viewModel, &GridViewModel::solvePMedianProblem);
     connect(_ui->actionCheck, &QAction::triggered, _viewModel, &GridViewModel::checkGraphConnection);
+    connect(_ui->actionOutput, &QAction::triggered, _viewModel, &GridViewModel::showLastSolutionOutput);
+    connect(_ui->actionParameters, &QAction::triggered, _viewModel, &GridViewModel::updateConfigs);
 
     // UI
     connect(_ui->actionOpen, &QAction::triggered, _viewModel, &GridViewModel::loadItemsFromFile);
@@ -41,9 +46,17 @@ void MainWindow::initConnections()
     connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeNode);
     connect(_ui->graphicsView, &Grid::onDeleteEdge, _viewModel, &GridViewModel::removeEdge);
     connect(_viewModel, &GridViewModel::onLoadFromFile, _ui->graphicsView, &Grid::insertItemsFromFile);
-
     connect(_viewModel, &GridViewModel::onCheckGraphConnection, [](const QString& message) {
         GraphCheck graphCheckDialog(message);
         graphCheckDialog.exec();
+    });
+    connect(_viewModel, &GridViewModel::onShowOutput, [](const PMedianSolutionView& solution) {
+        PMedianSolutionDialog outputDialog(solution);
+        outputDialog.exec();
+    });
+    connect(_viewModel, &GridViewModel::onUpdateConfigs, [](
+        PMedianConfig& pMedianConfig, SimulatedAnnealingConfig& simAnnealConfig) {
+        ParameterDialog parameterDialog(pMedianConfig, simAnnealConfig);
+        parameterDialog.exec();
     });
 }

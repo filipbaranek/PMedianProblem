@@ -1,9 +1,10 @@
 #include "pmediansolver.h"
 
 
-PMedianSolution PMedianSolver::solve(const PMedianConfig&            pmedianConfig,
-                                     const SimulatedAnnealingConfig& simAnnealConfig,
-                                     std::map<int, Node>&            nodes)
+PMedianSolution PMedianSolver::solve(
+    const PMedianConfig&            pmedianConfig,
+    const SimulatedAnnealingConfig& simAnnealConfig,
+    std::map<int, Node>&            nodes)
 {
     PMedianEvaluator   evaluator(pmedianConfig, nodes);
     SimulatedAnnealing simAnneal(simAnnealConfig);

@@ -103,6 +103,8 @@
    </attribute>
    <addaction name="actionRun"/>
    <addaction name="actionCheck"/>
+   <addaction name="actionParameters"/>
+   <addaction name="actionOutput"/>
   </widget>
   <action name="actionOpen">
    <property name="text">
@@ -139,6 +141,28 @@
    </property>
    <property name="text">
     <string>Check</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionParameters">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::InputKeyboard"/>
+   </property>
+   <property name="text">
+    <string>Parameters</string>
+   </property>
+   <property name="menuRole">
+    <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionOutput">
+   <property name="icon">
+    <iconset theme="QIcon::ThemeIcon::DialogInformation"/>
+   </property>
+   <property name="text">
+    <string>Output</string>
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>

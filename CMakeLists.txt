@@ -35,6 +35,9 @@ set(SOURCES
     src/Model/distancematrix.cpp
     src/Services/pmedianevaluator.cpp
     src/Services/simulatedannealing.cpp
+    src/Services/pmediansolver.cpp
+    src/View/solutionview.cpp
+    src/View/parameterview.cpp
 )
 
 set(HEADERS
@@ -66,6 +69,8 @@ set(HEADERS
     src/Services/simulatedannealing.h
     src/Services/ievaluator.h
     src/Services/pmediansolver.h
+    src/View/solutionview.h
+    src/View/parameterview.h
 )
 
 set(VIEWS
@@ -76,9 +81,6 @@ qt_add_executable(PMedianProblem
     ${SOURCES}
     ${HEADERS}
     ${VIEWS}
-    src/Services/pmediansolver.cpp
-    src/View/solutionview.h
-    src/View/solutionview.cpp
 )
 
 target_link_libraries(PMedianProblem PRIVATE

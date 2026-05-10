@@ -9,7 +9,8 @@
 #include <QLabel>
 
 EdgeEditDialog::EdgeEditDialog(EdgeView* edge, QWidget* parent)
-    : QDialog(parent), _edge(edge)
+    : QDialog(parent)
+    , _edge(edge)
 {
     setWindowTitle("Edit edge");
 

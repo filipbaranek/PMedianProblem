@@ -5,7 +5,8 @@
 #include <QPushButton>
 
 PMedianSolutionDialog::PMedianSolutionDialog(const PMedianSolutionView& solution, QWidget* parent)
-    : _solution(solution)
+    : QDialog(parent)
+    , _solution(solution)
 {
     setWindowTitle("Solution output");
 
@@ -39,22 +40,38 @@ void PMedianSolutionDialog::loadFromSolution()
 {
     QString text;
 
-    text += "=== P-Median Solution ===\n\n";
-    text += QString("Total cost: %1\n\n").arg(_solution.totalCost);
-    text += "Selected storages:\n";
-
-    for (auto& storage : _solution.selectedStorages)
+    if (_solution.assignments.empty() || _solution.selectedStorages.empty())
     {
-        text += QString("  - %1\n").arg(storage._name);
+        text += R"(
+            <div align='center'>
+                <h2>No solution to show yet</h2>
+            </div>
+        )";
+    }
+    else
+    {
+        text += R"(
+            <div align='center'>
+                <h1>P-Median Solution</h1>
+            </div>
+        )";
+        text += QString("<b>Total cost:</b> %1<br><br>").arg(_solution.totalCost);
+        text += "<b>Selected storages:</b><br>";
+
+        for (auto& storage : _solution.selectedStorages)
+        {
+            text += QString("&nbsp;&nbsp;&bull; %1<br>").arg(storage._name);
+        }
+
+        text += "<br><b>Assignments:</b><br>";
+        for (const auto& [client, storage]
+             : _solution.assignments)
+        {
+            text += QString("&nbsp;&nbsp;%1 &rarr; %2<br>").arg(client._name, storage._name);
+        }
     }
 
-    text += "\nAssignments:\n";
-    for (const auto& [client, storage] : _solution.assignments)
-    {
-        text += QString("  %1 -> %2\n").arg(client._name, storage._name);
-    }
-
-    _output->setText(text);
+    _output->setHtml(text);
 }
 
 void PMedianSolutionDialog::initConnections()

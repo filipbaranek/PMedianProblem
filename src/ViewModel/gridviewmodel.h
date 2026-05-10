@@ -26,6 +26,8 @@ public slots:
 
     void solvePMedianProblem();
 
+    void showLastSolutionOutput();
+
     void setNode(const NodeData& node);
 
     void setEdge(const EdgeData& edge);
@@ -34,14 +36,14 @@ public slots:
 
     void removeEdge(int id);
 
-    void updateConfig(const PMedianConfig& config);
-
-    void updateConfig(const SimulatedAnnealingConfig& config);
+    void updateConfigs();
 
     void clear();
 
 signals:
     void onCheckGraphConnection(const QString& message);
+
+    void onUpdateConfigs(PMedianConfig& pMedianConfig, SimulatedAnnealingConfig& simAnnealCOnfig);
 
     void onShowOutput(const PMedianSolutionView& solution);
 
