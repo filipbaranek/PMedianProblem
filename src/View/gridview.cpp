@@ -154,7 +154,7 @@ void Grid::mousePressEvent(QMouseEvent* event)
             return;
         }
         auto* foundEdge = findItemAt<EdgeView>(_scene, mapToScene(event->pos()));
-        if (foundEdge != nullptr)
+        if (foundEdge != nullptr && !foundEdge->isSolutionEdge())
         {
             QMenu edgeMenu;
 

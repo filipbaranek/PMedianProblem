@@ -65,7 +65,7 @@ std::shared_ptr<ISolution> PMedianEvaluator::getNeighbor(ISolution& currentSolut
 {
     static std::uniform_int_distribution randNeighborhood(
         static_cast<int>(NeighborhoodType::ADD), static_cast<int>(NeighborhoodType::EXCHANGE));
-    std::uniform_int_distribution randStorage(0, static_cast<int>(_storages.size() - 1));
+    static std::uniform_int_distribution randStorage(0, static_cast<int>(_storages.size() - 1));
 
     auto& currentSol              = dynamic_cast<PMedianSolution&>(currentSolution);
     auto newSolution              = std::make_shared<PMedianSolution>(currentSol);
