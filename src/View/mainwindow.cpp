@@ -3,6 +3,7 @@
 #include "graphcheck.h"
 #include "solutionview.h"
 #include "parameterview.h"
+#include "helpview.h"
 #include "../ViewModel/gridviewmodel.h"
 #include <QVBoxLayout>
 
@@ -36,6 +37,10 @@ void MainWindow::initConnections()
     connect(_ui->actionOpen, &QAction::triggered, _viewModel, &GridViewModel::loadItemsFromFile);
     connect(_ui->actionSave_as, &QAction::triggered, _viewModel, &GridViewModel::saveItemsToFile);
     connect(_ui->actionEuclidean_distance, &QAction::toggled, _ui->graphicsView, &Grid::setEuclideanMode);
+    connect(_ui->actionShow, &QAction::triggered, []() {
+        HelpDialog helpDialog;
+        helpDialog.exec();
+    });
 
     // Events
     connect(_ui->graphicsView, &Grid::onClear, _viewModel, &GridViewModel::clear);

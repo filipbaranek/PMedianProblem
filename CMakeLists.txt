@@ -38,6 +38,7 @@ set(SOURCES
     src/Services/pmediansolver.cpp
     src/View/solutionview.cpp
     src/View/parameterview.cpp
+    src/View/helpview.cpp
 )
 
 set(HEADERS
@@ -71,6 +72,7 @@ set(HEADERS
     src/Services/pmediansolver.h
     src/View/solutionview.h
     src/View/parameterview.h
+    src/View/helpview.h
 )
 
 set(VIEWS

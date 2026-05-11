@@ -74,6 +74,7 @@
     <property name="title">
      <string>Help</string>
     </property>
+    <addaction name="actionShow"/>
    </widget>
    <addaction name="menuFile"/>
    <addaction name="menuAlgorithm"/>
@@ -166,6 +167,11 @@
    </property>
    <property name="menuRole">
     <enum>QAction::MenuRole::NoRole</enum>
+   </property>
+  </action>
+  <action name="actionShow">
+   <property name="text">
+    <string>Show</string>
    </property>
   </action>
  </widget>

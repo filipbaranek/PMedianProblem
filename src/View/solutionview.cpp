@@ -40,52 +40,52 @@ void PMedianSolutionDialog::initUI()
 
 void PMedianSolutionDialog::loadFromSolution()
 {
-    QString text;
+    QString html;
 
-    text += R"(
+    html += R"(
         <div style='text-align:center; font-size:16px;'>
     )";
     if (_solution.assignments.empty() || _solution.selectedStorages.empty())
     {
-        text += R"(
+        html += R"(
             <h2>No solution to show yet</h2>
         )";
     }
     else
     {
-        text += R"(
+        html += R"(
             <h1 style='font-size:32px;'>P-Median Solution</h1>
         )";
 
-        text += QString(
+        html += QString(
             "<p><b style='font-size:20px;'>Total cost:</b> "
             "<span style='font-size:20px;'>%1</span></p>")
             .arg(_solution.totalCost);
 
-        text += R"(
+        html += R"(
             <p><b style='font-size:22px;'>Selected storages:</b></p>
         )";
 
         for (auto& storage : _solution.selectedStorages)
         {
-            text += QString("<p style='font-size:18px;'>&bull; %1</p>").arg(storage._name);
+            html += QString("<p style='font-size:18px;'>&bull; %1</p>").arg(storage._name);
         }
 
-        text += R"(
+        html += R"(
             <br>
             <p><b style='font-size:22px;'>Assignments:</b></p>
         )";
 
         for (const auto& [client, storage] : _solution.assignments)
         {
-            text += QString("<p style='font-size:18px;'>%1 &rarr; %2</p>")
+            html += QString("<p style='font-size:18px;'>%1 &rarr; %2</p>")
                 .arg(client._name, storage._name);
         }
     }
 
-    text += "</div>";
+    html += "</div>";
 
-    _output->setHtml(text);
+    _output->setHtml(html);
 }
 
 void PMedianSolutionDialog::initConnections()
